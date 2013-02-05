@@ -1,0 +1,9 @@
+source :rubygems
+gem 'activerecord'
+gem 'nezu'
+
+group :development, :test do
+  gem 'debugger'
+  gem 'rspec'
+end
+

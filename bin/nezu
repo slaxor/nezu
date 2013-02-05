@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+puts File.join(File.expand_path('../..', __FILE__), 'lib')
+$:.unshift(File.join(File.expand_path('../..', __FILE__), 'lib'))
+ARGV << 'help' if ARGV.length == 0
+
+require "nezu/cli"
+
