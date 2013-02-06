@@ -14,18 +14,22 @@ module Nezu
       exit(1)
     end
 
-    def self.new(appname)
-      puts "Creating application dir in #{appname}"
+    def self.new(*params)
+      puts %Q(Creating application dir in "#{params[0][0]}")
       require 'nezu/generators'
       Nezu::Generators::Application.new(ARGV)
       exit(0)
+    rescue
+      help
     end
 
-    def self.run
-      puts "Starting app..."
+    def self.run(*params)
+      puts %Q(Starting app...)
       require 'nezu/runner'
       Nezu::Runner.new(ARGV)
       exit(0)
+    rescue
+      help
     end
   end
 end
