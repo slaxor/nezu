@@ -1,38 +1,12 @@
-require 'rails/generators/app_base'
-
-module Rails
-  module ActionMethods
-    attr_reader :options
-
-    def initialize(generator)
-      @generator = generator
-      @options   = generator.options
+module Nezu
+  module Generators
+    class AppGenerator
+      attr_reader :app_name
+      def initialize(app_name)
+        @app_name = app_name
+      end
     end
 
-    private
-      %w(template copy_file directory empty_directory inside
-         empty_directory_with_gitkeep create_file chmod shebang).each do |method|
-        class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def #{method}(*args, &block)
-            @generator.send(:#{method}, *args, &block)
-          end
-        RUBY
-      end
-
-      # TODO: Remove once this is fully in place
-      def method_missing(meth, *args, &block)
-        @generator.send(meth, *args, &block)
-      end
-  end
-
-  # The application builder allows you to override elements of the application
-  # generator without being forced to reverse the operations of the default
-  # generator.
-  #
-  # This allows you to override entire operations, like the creation of the
-  # Gemfile, README, or JavaScript files, without needing to know exactly
-  # what those operations do so you can create another template action.
-  class AppBuilder
     def rakefile
       template "Rakefile"
     end
@@ -93,10 +67,6 @@ module Rails
 
     def log
       empty_directory_with_gitkeep "log"
-    end
-
-    def public_directory
-      directory "public", "public", :recursive => false
     end
 
     def script
@@ -301,3 +271,4 @@ module Rails
     end
   end
 end
+

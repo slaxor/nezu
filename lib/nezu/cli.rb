@@ -29,7 +29,7 @@ module Nezu
       Nezu::Runner.new(ARGV)
       exit(0)
     rescue
-      help
+
     end
   end
 end
