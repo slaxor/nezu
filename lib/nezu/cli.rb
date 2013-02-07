@@ -17,10 +17,11 @@ module Nezu
     def self.new(*params)
       puts %Q(Creating application dir in "#{params[0][0]}")
       require 'nezu/generators'
-      Nezu::Generators::Application.new(ARGV)
+      app = Nezu::Generators::Application::AppGenerator.new(params[0][0])
+      app.generate!
       exit(0)
-    rescue
-      help
+    #rescue
+      #help
     end
 
     def self.run(*params)

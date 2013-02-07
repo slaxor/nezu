@@ -4,6 +4,6 @@ describe 'User script' do
   end
 
   it 'should have a "new" option' do
-    File.join(File.dirname(__FILE__), '..', '..', 'bin', 'nezu')).should be_true
+    File.join(File.dirname(__FILE__), '..', '..', 'bin', 'nezu').should be_true
   end
 end
