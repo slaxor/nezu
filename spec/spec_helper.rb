@@ -8,6 +8,7 @@ SPEC_TMP_DIR = "#{Dir.pwd}/spec/support/tmp"
 
 
 require 'nezu'
+require 'nezu/config/runtime'
 require 'debugger'
 require 'rspec'
 require 'rspec/autorun'

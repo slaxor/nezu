@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency             'amqp'
   s.add_dependency             'activerecord'
+  s.add_dependency             'active_support'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'sdoc'
   s.add_development_dependency 'rspec'
