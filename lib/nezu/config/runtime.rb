@@ -1,21 +1,18 @@
 #### TODO good idea?; If so where to put it then?
-module ModuleExtensionForModuleAttribute
-  def create_module_attribute(hash)
-    hash.each do |key, val|
+#module ModuleExtensionForModuleAttribute
+  #def self.create_module_attribute(hash)
+    #hash.each do |key, val|
       #type_cast = Hash.new('to_s').merge({Hash => 'to_hash', Fixnum => 'to_i', Float => 'to_f', Array => 'to_a'})[val.class]
-      self.module_eval do
-        @#{key} = val
-      end
-      self.module_eval %Q(
-        def self.#{key}
-          @#{key}
-        end
-      )
-    end
-  end
-end
+      #module_eval do
+        #def self.#{key}
+          #val
+        #end
+      #end
+    #end
+  #end
+#end
 
-Module.send(:include, ModuleExtensionForModuleAttribute)
+#Module.send(:extend, ModuleExtensionForModuleAttribute)
 ####
 
 module Nezu

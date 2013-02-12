@@ -8,11 +8,13 @@ describe Nezu::Config::Runtime do
   describe '#new' do
     it 'should look for a config/amqp.yml' do
       File.should_receive(:exist?).with('config/amqp.yml')
+      File.should_receive(:exist?).with('config/database.yml')
       Nezu::Config::Runtime.new
     end
 
     it 'should read config/amqp.yml if it exists' do
       YAML.should_receive(:load_file).with('config/amqp.yml')
+      YAML.should_receive(:load_file).with('config/database.yml')
       Nezu::Config::Runtime.new
     end
 
