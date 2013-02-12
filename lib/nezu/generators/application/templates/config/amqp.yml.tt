@@ -5,7 +5,6 @@ development:
     <%= 'bar' %>.dev
   publishing_queue:
     <%= app_name %>.dev
-
 production:
   host: 127.0.0.1
   subscriptions:

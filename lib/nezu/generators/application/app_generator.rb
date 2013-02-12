@@ -6,10 +6,11 @@ module Nezu
 
         def initialize(destination_root)
           app_name =  File.basename(destination_root)
-          name_space ||= Object.const_set(app_name.split(/_/).map(&:capitalize).join('').to_sym, Module.new)
+          name_space = app_name.split(/_/).map(&:capitalize).join('').to_sym
+          Object.const_set(name_space, Module.new) unless Object.const_defined?(name_space)
           @@config  = Nezu::Config::Template.new(:destination_root => destination_root,
                                      :app_name => app_name,
-                                     :name_space => name_space)
+                                     :name_space => Object.const_get(name_space))
           Nezu::Generators.const_set(:GENERATOR, self) unless Nezu::Generators.const_defined?(:GENERATOR)
         end
 
