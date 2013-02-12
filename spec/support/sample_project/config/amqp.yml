@@ -1,5 +1,16 @@
-development: &dev
+development:
   host: 127.0.0.1
+  subscriptions:
+    foo_dev
+    bar_dev
+  publishing_queue:
+    sample_project_dev
+
 production:
-  <<: *dev
+  host: 127.0.0.1
+  subscriptions:
+     foo
+     bar
+  publishing_queue:
+    sample_project
 

@@ -11,18 +11,15 @@ module Nezu
     FILE_SUFFIXES = %w(tt)
 
     def template_to(filename) # e.g. "config/amqp.yml"
-      erb_vars = {:app_name => 'foo', :app_const => Foo}
-      @erb_bindings ||= Nezu::Config::Template.new(erb_vars)
-
-      dirname = File.join(GENERATOR.destination_root, File.dirname(filename))
+      dirname = File.join(GENERATOR.config.destination_root, File.dirname(filename))
       source_file = find_template(filename)
       if source_file
         FileUtils.mkdir_p(dirname)
 
         if FILE_SUFFIXES.include?(source_file.split('.')[-1])
           e = ERB.new(File.read(source_file))
-          File.open(File.join(GENERATOR.destination_root, filename.sub(/\.tt$/,'')), File::CREAT|File::TRUNC|File::WRONLY) do |f|
-            f.write(e.result(@erb_bindings.get_binding))
+          File.open(File.join(GENERATOR.config.destination_root, filename.sub(/\.tt$/,'')), File::CREAT|File::TRUNC|File::WRONLY) do |f|
+            f.write(e.result(GENERATOR.config.get_binding))
           end
         else
           FileUtils.cp(source_file, dirname)

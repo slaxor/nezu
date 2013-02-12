@@ -9,15 +9,15 @@ describe Nezu::Generators::Application::AppGenerator do
     end
 
     it 'should have a destination_root' do
-      @app.destination_root.should == '/blah/foo'
+      @app.config.destination_root.should == '/blah/foo'
     end
 
     it 'should have an app_name' do
-      @app.app_name.should == 'foo'
+      @app.config.app_name.should == 'foo'
     end
 
     it 'should have a scope' do
-      @app.name_space.should == Foo
+      @app.config.name_space.should == Foo
       Foo.class.should be_a(Module)
     end
   end

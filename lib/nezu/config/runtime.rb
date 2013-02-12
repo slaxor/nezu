@@ -1,20 +1,3 @@
-#### TODO good idea?; If so where to put it then?
-#module ModuleExtensionForModuleAttribute
-  #def self.create_module_attribute(hash)
-    #hash.each do |key, val|
-      #type_cast = Hash.new('to_s').merge({Hash => 'to_hash', Fixnum => 'to_i', Float => 'to_f', Array => 'to_a'})[val.class]
-      #module_eval do
-        #def self.#{key}
-          #val
-        #end
-      #end
-    #end
-  #end
-#end
-
-#Module.send(:extend, ModuleExtensionForModuleAttribute)
-####
-
 module Nezu
   module Config
     class Runtime

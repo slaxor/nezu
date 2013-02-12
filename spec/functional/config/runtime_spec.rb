@@ -3,6 +3,7 @@ describe Nezu::Config::Runtime do
   before do
     @orig_pwd = Dir.pwd
     Dir.chdir(File.join(File.dirname(__FILE__), '../../support/sample_project'))
+    ActiveRecord::Base.stub!(:establish_connection).and_return(true)
   end
 
   describe '#new' do
@@ -13,8 +14,8 @@ describe Nezu::Config::Runtime do
     end
 
     it 'should read config/amqp.yml if it exists' do
-      YAML.should_receive(:load_file).with('config/amqp.yml')
-      YAML.should_receive(:load_file).with('config/database.yml')
+      YAML.should_receive(:load_file).with('config/amqp.yml').and_return({})
+      YAML.should_receive(:load_file).with('config/database.yml').and_return({})
       Nezu::Config::Runtime.new
     end
 

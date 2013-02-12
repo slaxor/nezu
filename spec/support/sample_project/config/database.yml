@@ -1,9 +1,9 @@
 development: &dev
   adapter: sqlite
   encoding: utf8
-  database: <%= app_name %>_development
+  database: sample_project_development
 
 production:
   <<: *dev
-  database: <%= app_name %>_production
+  database: sample_project_production
 

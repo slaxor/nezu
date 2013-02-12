@@ -13,21 +13,13 @@ module Nezu
           Nezu::Generators.const_set(:GENERATOR, self) unless Nezu::Generators.const_defined?(:GENERATOR)
         end
 
-        def destination_root
-          @@config.destination_root
-        end
-
-        def app_name
-          @@config.app_name
-        end
-
-        def name_space
-          @@config.name_space
+        def config
+          @@config
         end
 
         def generate!
-          raise Nezu::Generators::Application::AppGeneratorError, "\"#{destination_root}\" already exists" if Dir.exist?(destination_root)
-          FileUtils.mkdir_p(destination_root)
+          raise Nezu::Generators::Application::AppGeneratorError, "\"#{@@config.destination_root}\" already exists" if Dir.exist?(@@config.destination_root)
+          FileUtils.mkdir_p(@@config.destination_root)
           generate_files_from_manifest!
         end
 
