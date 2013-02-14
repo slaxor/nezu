@@ -15,9 +15,8 @@ module Nezu
     end
 
     def self.new(*params)
-      if params[0].grep(/--amqp_scope/)
-        configatron.amqp_scope = 
-      end
+      amqp_scope = params[0].grep(/--amqp_scope/)[0].match(/=(\S*)/)[1] rescue nil
+      configatron.amqp_scope = amqp_scope if amqp_scope
       puts %Q(Creating application dir in "#{params[0][0]}")
       require 'nezu/generators'
       app = Nezu::Generators::Application::AppGenerator.new(params[0][0])
