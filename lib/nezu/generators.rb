@@ -14,10 +14,10 @@ module Nezu
       if source_file
         FileUtils.mkdir_p(dirname)
 
-        if FILE_SUFFIXES.include?(source_file.split('.')[-1])
+        if configatron.file_suffixes.include?(source_file.split('.')[-1])
           e = ERB.new(File.read(source_file))
           File.open(File.join(configatron.destination_root, filename.sub(/\.tt$/,'')), File::CREAT|File::TRUNC|File::WRONLY) do |f|
-            f.write(e.result(GENERATOR.config.get_binding))
+            f.write(e.result(configatron.binding))
           end
         else
           FileUtils.cp(source_file, dirname)
@@ -28,9 +28,9 @@ module Nezu
     private
 
     def find_template(filename)
-      candidates = TEMPLATE_PATHS.map do |path|
+      candidates = configatron.template_paths.map do |path|
         [File.join(path, filename)] +
-        FILE_SUFFIXES.map do |suffix|
+        configatron.file_suffixes.map do |suffix|
           File.join(path, filename) + '.' + suffix
         end
       end.flatten

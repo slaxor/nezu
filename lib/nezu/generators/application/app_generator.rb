@@ -7,8 +7,8 @@ module Nezu
         def initialize(destination_root)
           configatron.destination_root = destination_root
           configatron.app_name =  File.basename(destination_root)
-          configatron.name_space = configatron.app_name.split(/_/).map(&:capitalize).join('').to_sym
-          Object.const_set(configatron.name_space, Module.new) unless Object.const_defined?(configatron.name_space)
+          name_space = configatron.app_name.split(/_/).map(&:capitalize).join('').to_sym
+          configatron.name_space = Object.const_set(name_space, Module.new) unless Object.const_defined?(name_space)
         end
 
         def generate!

@@ -7,7 +7,6 @@ ENV['NEZU_TEMPLATES'] = "#{Dir.pwd}/spec/support/lib/nezu/generators/application
 SPEC_TMP_DIR = "#{Dir.pwd}/spec/support/tmp"
 
 require 'nezu'
-require 'nezu/config/runtime'
 require 'debugger'
 require 'rspec'
 require 'rspec/autorun'
