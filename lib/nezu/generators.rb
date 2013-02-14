@@ -1,24 +1,22 @@
 require 'fileutils'
 require 'erb'
 require 'nezu/generators/application/app_generator'
-require 'nezu/config/template'
 
 module Nezu
   module Generators
 
-    TEMPLATE_PATHS = [File.join(Nezu::BASE_DIR, 'lib/nezu/generators/application/templates')] + ENV['NEZU_TEMPLATES'].to_s.split(':')
-
-    FILE_SUFFIXES = %w(tt)
+    configatron.template_paths = [File.join(configatron.gem_base_dir 'lib/nezu/generators/application/templates')] + ENV['NEZU_TEMPLATES'].to_s.split(':')
+    configatron.file_suffixes = %w(tt)
 
     def template_to(filename) # e.g. "config/amqp.yml"
-      dirname = File.join(GENERATOR.config.destination_root, File.dirname(filename))
+      dirname = File.join(configatron.destination_root, File.dirname(filename))
       source_file = find_template(filename)
       if source_file
         FileUtils.mkdir_p(dirname)
 
         if FILE_SUFFIXES.include?(source_file.split('.')[-1])
           e = ERB.new(File.read(source_file))
-          File.open(File.join(GENERATOR.config.destination_root, filename.sub(/\.tt$/,'')), File::CREAT|File::TRUNC|File::WRONLY) do |f|
+          File.open(File.join(configatron.destination_root, filename.sub(/\.tt$/,'')), File::CREAT|File::TRUNC|File::WRONLY) do |f|
             f.write(e.result(GENERATOR.config.get_binding))
           end
         else

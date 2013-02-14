@@ -5,22 +5,15 @@ module Nezu
         include Nezu::Generators
 
         def initialize(destination_root)
-          app_name =  File.basename(destination_root)
-          name_space = app_name.split(/_/).map(&:capitalize).join('').to_sym
-          Object.const_set(name_space, Module.new) unless Object.const_defined?(name_space)
-          @@config  = Nezu::Config::Template.new(:destination_root => destination_root,
-                                     :app_name => app_name,
-                                     :name_space => Object.const_get(name_space))
-          Nezu::Generators.const_set(:GENERATOR, self) unless Nezu::Generators.const_defined?(:GENERATOR)
-        end
-
-        def config
-          @@config
+          configatron.destination_root = destination_root
+          configatron.app_name =  File.basename(destination_root)
+          configatron.name_space = configatron.app_name.split(/_/).map(&:capitalize).join('').to_sym
+          Object.const_set(configatron.name_space, Module.new) unless Object.const_defined?(configatron.name_space)
         end
 
         def generate!
-          raise Nezu::Generators::Application::AppGeneratorError, "\"#{@@config.destination_root}\" already exists" if Dir.exist?(@@config.destination_root)
-          FileUtils.mkdir_p(@@config.destination_root)
+          raise Nezu::Generators::Application::AppGeneratorError, "\"#{configatron.destination_root}\" already exists" if Dir.exist?(configatron.destination_root)
+          FileUtils.mkdir_p(configatron.destination_root)
           generate_files_from_manifest!
         end
 

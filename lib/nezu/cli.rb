@@ -1,5 +1,5 @@
-require 'rbconfig'
 Signal.trap("INT") { puts; exit(1) }
+
 module Nezu
   module CLI
     def self.help(*params)

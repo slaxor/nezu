@@ -2,19 +2,11 @@
 #
 #
 #
-#Config
-#QUEUENAME = 'talkyoo.cashman'
-amqp_file = File.join('config', 'amqp.yml')
-amqp = YAML.load_file(amqp_file)[Nezu.env] if File.exists?(amqp_file)
-configatron.configure_from_hash(amqp: amqp)
+Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
+  yaml = YAML.load_file(yaml_file)[Nezu.env]
+  configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
+end
 
-
-amqp = YAML.load_file(File.join('config', 'amqp.yml'))[Nezu.env]
-configatron.configure_from_hash(amqp: amqp)
-
-#End of Config
-
-Nezu::Config::Runtime.amqp
 require 'bundler'
 Bundler.setup
 
@@ -33,9 +25,10 @@ sleep(0.5)
 connection = AMQP.connect
 channel    = AMQP::Channel.new(connection, :auto_recovery => true)
 channel.prefetch(1)
-
-channel.queue(CONFIG.amqp['subscriptions'], :durable => true, :auto_delete => false).subscribe(:ack => true) do |metadata, payload|
-  Dispatcher.new(metadata, payload)
+configatron.amqp.subscriptions.each do |subscription|
+  channel.queue(subscription, :durable => true, :auto_delete => false).subscribe(:ack => true) do |metadata, payload|
+    Dispatcher.new(metadata, payload)
+  end
 end
 
 puts "[boot] Ready"
