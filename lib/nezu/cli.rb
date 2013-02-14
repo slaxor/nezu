@@ -16,7 +16,6 @@ module Nezu
 
     def self.new(*params)
       puts %Q(Creating application dir in "#{params[0][0]}")
-      require 'nezu/config/template'
       require 'nezu/generators'
       app = Nezu::Generators::Application::AppGenerator.new(params[0][0])
       app.generate!
@@ -27,7 +26,6 @@ module Nezu
 
     def self.run(*params)
       puts %Q(Starting app...)
-      require 'nezu/config/runtime'
       require 'nezu/runner'
       Nezu::Runner.new(ARGV)
       exit(0)
