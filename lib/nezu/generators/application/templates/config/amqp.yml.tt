@@ -1,8 +1,8 @@
 development:
   host: 127.0.0.1
   subscriptions:
-    - <%= (scope + '.') if scope %><%= app_name %>.dev
+    - <%= (amqp_scope + '.') if amqp_scope %><%= app_name %>.dev
 production:
   host: 127.0.0.1
   subscriptions:
-    - <%= (scope + '.') if scope %><%= app_name %>.prod
+    - <%= (amqp_scope + '.') if amqp_scope %><%= app_name %>.prod
