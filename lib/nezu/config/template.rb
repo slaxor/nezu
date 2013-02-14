@@ -1,7 +1,9 @@
 module Nezu
   module Config
     class Template
-      include Nezu::Config
+      def get_binding
+        binding
+      end
     end
   end
 end
