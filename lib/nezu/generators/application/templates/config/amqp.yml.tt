@@ -1,15 +1,8 @@
 development:
   host: 127.0.0.1
   subscriptions:
-    <%= 'foo' %>.dev
-    <%= 'bar' %>.dev
-  publishing_queue:
-    <%= app_name %>.dev
+    <%= (scope + '.') if scope %><%= app_name %>.dev
 production:
   host: 127.0.0.1
   subscriptions:
-     foo
-     bar
-  publishing_queue:
-    <%= app_name %>
-
+    <%= (scope + '.') if scope %><%= app_name %>.prod
