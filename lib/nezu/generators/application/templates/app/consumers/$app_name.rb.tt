@@ -1,4 +1,6 @@
-class <%= app_const %> < Nezu::Runtime::Consumer
-  #your app code here
+module <%= name_space %>
+  class <%= name_space %> < Nezu::Runtime::Consumer
+    #your app code here
+  end
 end
 
