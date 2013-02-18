@@ -24,7 +24,7 @@ $:.unshift(File.expand_path("../../lib", __FILE__))
 module Nezu
   class Runner
     def subscriber_class(subscription)
-      Kernel.const_get(subscription.split('.').last.capitalize) #TODO handle namespaces
+      Kernel.const_get(subscription.split('.').last.capitalize) #TODO handle namespaces #BUG
     end
 
     def initialize
