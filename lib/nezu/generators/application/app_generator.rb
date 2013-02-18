@@ -15,6 +15,12 @@ module Nezu
           raise Nezu::Generators::Application::AppGeneratorError, "\"#{configatron.destination_root}\" already exists" if Dir.exist?(configatron.destination_root)
           FileUtils.mkdir_p(configatron.destination_root)
           generate_files_from_manifest!
+          rename_app_name_template
+        end
+
+        def rename_app_name_template
+          File.rename(File.join(configatron.destination_root,'app/consumers/$app_name.rb'),
+            File.join(configatron.destination_root,"app/consumers/#{configatron.app_name}.rb"))
         end
 
         def generate_files_from_manifest! # TODO rewrite so a MANIFEST isn´t needed

@@ -2,6 +2,8 @@
 #
 #
 #
+Signal.trap("INT") { connection.close { EventMachine.stop } ; exit}
+
 Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   yaml = YAML.load_file(yaml_file)[Nezu.env]
   configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
@@ -11,28 +13,33 @@ require 'bundler'
 Bundler.setup
 
 require 'amqp'
+require 'json'
 require 'debugger' #TODO ... unless Nezu.env.production?
+require 'nezu/runtime/worker'
 
 $: << './lib'
 $: << './app'
 $:.unshift(File.expand_path("../../lib", __FILE__))
 
-require 'dispatcher'
+module Nezu
+  class Runner
+    def subscriber_class(subscription)
+      Kernel.const_get(subscription.split('.').last.capitalize) #TODO handle namespaces
+    end
 
-t = Thread.new { EventMachine.run }
-sleep(0.5)
+    def initialize
+      AMQP.start(configatron.amqp.url) do |connection, open_ok|
+        channel = AMQP::Channel.new(connection, :auto_recovery => true)
+        configatron.amqp.subscriptions.each do |subscription|
+          worker = Nezu::Runtime::Worker.new(channel, subscription, subscriber_class(subscription).new)
+          worker.start
+        end
+      end
 
-connection = AMQP.connect
-channel    = AMQP::Channel.new(connection, :auto_recovery => true)
-channel.prefetch(1)
-configatron.amqp.subscriptions.each do |subscription|
-  channel.queue(subscription, :durable => true, :auto_delete => false).subscribe(:ack => true) do |metadata, payload|
-    Dispatcher.new(metadata, payload)
+      puts "[boot] Ready"
+    end
   end
 end
 
-puts "[boot] Ready"
-Signal.trap("INT") { connection.close { EventMachine.stop } ; exit}
-t.join
-
+Nezu::Runner.new
 

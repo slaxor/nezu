@@ -1,4 +1,4 @@
-app/dispatcher.rb
+app/consumers/$app_name.rb.tt
 app/models/.gitkeep
 README.md
 Gemfile
