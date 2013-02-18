@@ -29,7 +29,8 @@ module Nezu
     def self.run(*params)
       puts %Q(Starting app...)
       require 'nezu/runner'
-      Nezu::Runner.new(ARGV)
+      puts "2"
+      Nezu::Runner.new
       exit(0)
     rescue
 

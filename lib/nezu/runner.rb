@@ -9,6 +9,8 @@ Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
 end
 
+puts "[Nezu Runner] starting..."
+
 require 'bundler'
 Bundler.setup
 
@@ -28,6 +30,7 @@ module Nezu
     end
 
     def initialize
+      puts "[Nezu Runner] initialize...."
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
         configatron.amqp.subscriptions.each do |subscription|
