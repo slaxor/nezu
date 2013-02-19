@@ -6,7 +6,7 @@ module Nezu
       end
 
       def self.to_queue_name
-        self.to_s.gsub(/::/, '.').downcase
+        self.to_s.gsub(/::/, '.').underscore
       end
 
       def handle_message(metadata, payload)

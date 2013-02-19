@@ -7,4 +7,11 @@ describe Nezu::Runtime::Consumer do
       Nezu::Runtime::Consumer.descendants.should == [Consumer2, Consumer1]
     end
   end
+
+  describe '::to_queue_name' do
+    it 'should return its translated class name' do
+      module JustAModule;class Consumer1<Nezu::Runtime::Consumer;end;end
+      JustAModule::Consumer1.to_queue_name.should == 'just_a_module.consumer1'
+    end
+  end
 end
