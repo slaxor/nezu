@@ -2,14 +2,10 @@
 #
 #
 #
-require 'bundler'
-Bundler.setup
-
 require 'amqp'
 require 'json'
-require 'debugger' #TODO ... unless Nezu.env.production?
 require 'nezu/runtime/worker'
-require 'configatron'
+require 'nezu/runtime/consumer'
 
 $: << './lib'
 $: << './app'
