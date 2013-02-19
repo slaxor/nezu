@@ -1,5 +1,5 @@
 development:
-url: amqp://127.0.0.1
+  url: amqp://127.0.0.1
   subscriptions:
     - <%= (amqp_scope + '.') unless amqp_scope.nil? %><%= app_name %>.dev
 production:

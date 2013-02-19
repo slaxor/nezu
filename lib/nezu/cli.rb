@@ -22,17 +22,14 @@ module Nezu
       app = Nezu::Generators::Application::AppGenerator.new(params[0][0])
       app.generate!
       exit(0)
-    #rescue
-      #help
     end
 
     def self.run(*params)
       puts %Q(Starting app...)
       require 'nezu/runner'
-      Nezu::Runner.new(ARGV)
+      puts "2"
+      Nezu::Runner.new
       exit(0)
-    rescue
-
     end
   end
 end
