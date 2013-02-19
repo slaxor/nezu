@@ -3,7 +3,7 @@ PATH
   specs:
     nezu (0.2.0)
       active_support
-      activerecord (<= 3.2.10)
+      activerecord
       amqp
       configatron
 
