@@ -5,9 +5,15 @@
 puts "1"
 Signal.trap("INT") { connection.close { EventMachine.stop } ; exit}
 puts "2"
+
 Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
+  puts "dir.glob"
+  puts yaml_file
   yaml = YAML.load_file(yaml_file)[Nezu.env]
-  configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
+  puts yaml
+  ret = configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
+  puts ret
+  puts "dir.glob end"
 end
 
 puts "[Nezu Runner] starting..."
