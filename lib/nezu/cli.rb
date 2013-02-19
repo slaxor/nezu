@@ -21,6 +21,7 @@ module Nezu
       require 'nezu/generators'
       app = Nezu::Generators::Application::AppGenerator.new(params[0][0])
       app.generate!
+      puts %Q(Successfully created App.)
       exit(0)
     end
 

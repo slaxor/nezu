@@ -30,11 +30,8 @@ module Nezu
       puts "[Nezu Runner] initialize...."
       require 'config/application'
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
-        puts "schleife"
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
-        puts Nezu::Runtime::Consumer.descendants.size
         Nezu::Runtime::Consumer.descendants.each do |consumer|
-          puts "Consumer: #{consumer.inspect}"
           worker = Nezu::Runtime::Worker.new(channel, consumer.new)
           worker.start
         end
@@ -43,5 +40,5 @@ module Nezu
   end
 end
 
-puts "[boot] Ready"
+puts "[Nezu Runner] Ready"
 
