@@ -23,7 +23,7 @@ puts "2"
 Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   puts "dir.glob"
   puts yaml_file
-  puts Nezu.env
+  puts "Nezu.env: #{Nezu.env}"
   yaml = YAML.load_file(yaml_file)[Nezu.env]
   puts yaml
   ret = configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
