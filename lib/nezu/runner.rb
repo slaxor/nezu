@@ -36,7 +36,7 @@ puts "[Nezu Runner] starting..."
 module Nezu
   class Runner
     def subscriber_class(subscription)
-      Kernel.const_get(subscription.split('.').last.capitalize) #TODO handle namespaces #BUG
+      Kernel.const_get(subscription.split('.')[-2].capitalize) #TODO handle namespaces #BUG
     end
 
     def initialize
