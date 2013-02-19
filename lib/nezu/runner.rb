@@ -2,8 +2,9 @@
 #
 #
 #
+puts "1"
 Signal.trap("INT") { connection.close { EventMachine.stop } ; exit}
-
+puts "2"
 Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   yaml = YAML.load_file(yaml_file)[Nezu.env]
   configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
