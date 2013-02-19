@@ -33,7 +33,7 @@ module Nezu
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
         puts "schleife"
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
-        puts Nezu::Runtime::Consumer.descendants
+        puts Nezu::Runtime::Consumer.descendants.size
         Nezu::Runtime::Consumer.descendants.each do |consumer|
           puts "Consumer: #{consumer.inspect}"
           worker = Nezu::Runtime::Worker.new(channel, consumer)
