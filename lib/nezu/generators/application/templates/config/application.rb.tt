@@ -3,8 +3,7 @@ if defined?(Bundler)
   Bundler.require(:default, Nezu.env)
 end
 
-module <%= name_space %>
-  class Application < Nezu::Runtime
-  end
+Dir.glob("**/*.rb").each do |f|
+  require f
 end
 

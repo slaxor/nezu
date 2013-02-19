@@ -1,5 +1,9 @@
 development:
   url: amqp://127.0.0.1
+  queue_prefix: talkyoo
+  queue_postfix: dev
 production:
   url: amqp://127.0.0.1
+  queue_prefix: talkyoo
+  queue_postfix: dev
 
