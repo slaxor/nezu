@@ -9,6 +9,7 @@ require 'amqp'
 require 'json'
 require 'debugger' #TODO ... unless Nezu.env.production?
 require 'nezu/runtime/worker'
+require 'configatron'
 
 $: << './lib'
 $: << './app'
