@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nezu (0.2.8)
+    nezu (0.2.9)
       active_support
       activerecord
       amqp

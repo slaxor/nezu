@@ -33,6 +33,7 @@ module Nezu
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
         Nezu::Runtime::Consumer.descendants.each do |consumer|
+          puts "Consumer: #{consumer.inspect}"
           worker = Nezu::Runtime::Worker.new(channel, consumer)
           worker.start
         end
@@ -41,6 +42,5 @@ module Nezu
   end
 end
 
-Nezu::Runner.new
 puts "[boot] Ready"
 
