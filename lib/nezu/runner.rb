@@ -29,7 +29,7 @@ module Nezu
   class Runner
     def subscriber_class(subscription)
       debugger
-      Kernel.const_get(subscription.split('.')[-2].capitalize) #TODO handle namespaces #BUG
+      Kernel.const_get(subscription.split('.')[-1].capitalize) #TODO handle namespaces #BUG
     end
 
     def initialize
