@@ -29,7 +29,7 @@ module Nezu
   class Runner
     def subscriber_class(subscription)
       debugger
-      Kernel.const_get(subscription.split('.')[-1].capitalize) #TODO handle namespaces #BUG
+      Object.const_get(subscription.split('.')[-1].capitalize).new #TODO handle namespaces #BUG
     end
 
     def initialize
@@ -37,7 +37,7 @@ module Nezu
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
         configatron.amqp.subscriptions.each do |subscription|
-          worker = Nezu::Runtime::Worker.new(channel, subscription, subscriber_class(subscription).new)
+          worker = Nezu::Runtime::Worker.new(channel, subscription, subscriber_class(subscription))
           worker.start
         end
       end
