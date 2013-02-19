@@ -7,9 +7,10 @@ module Nezu
 
       def self.to_queue_name
         q = ''
-        q << "#{configatron.amqp.queue_prefix}." if configatron.amqp.queue_prefix
+        q << "#{configatron.amqp.queue_prefix}." unless configatron.amqp.queue_prefix.nil?
         q << self.to_s.gsub(/::/, '.').underscore
-        q << ".#{configatron.amqp.queue_postfix}" if configatron.amqp.queue_postfix
+        q << ".#{configatron.amqp.queue_postfix}" unless configatron.amqp.queue_postfix.nil?
+        q
       end
 
       def handle_message(metadata, payload)
