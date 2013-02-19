@@ -1,10 +1,9 @@
 development:
   host: 127.0.0.1
   subscriptions:
-    foo_dev
-    bar_dev
+    talkyoo.numberman2
   publishing_queue:
-    sample_project_dev
+    talkyoo.numberman2
 
 production:
   host: 127.0.0.1
