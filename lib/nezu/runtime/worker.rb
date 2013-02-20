@@ -2,7 +2,7 @@ module Nezu
   module Runtime
     class Worker
       def initialize(channel, consumer = Consumer.new)
-        @queue_name = consumer.class.to_queue_name
+        @queue_name = consumer.class.queue_name
         puts "queue name: #{@queue_name}"
         @channel = channel
         @channel.on_error(&method(:handle_channel_exception))
