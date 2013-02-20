@@ -1,7 +1,6 @@
 require 'bundler'
 Bundler.setup
 
-require 'debugger' #TODO ... unless Nezu.env.production?
 require 'yaml'
 require 'active_support/core_ext'
 require 'active_record'
@@ -23,4 +22,6 @@ module Nezu
     end
   end
 end
+
+require 'debugger' unless Nezu.env.production?
 
