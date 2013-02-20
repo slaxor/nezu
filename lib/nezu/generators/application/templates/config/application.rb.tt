@@ -7,3 +7,5 @@ Dir.glob("**/*.rb").each do |f|
   require f
 end
 
+LOGGER = Logger.new('log/<%= name_space %>.log')
+
