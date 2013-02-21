@@ -3,9 +3,11 @@
 #
 #
 require 'amqp'
+require "bunny"
 require 'json'
 require 'nezu/runtime/worker'
 require 'nezu/runtime/consumer'
+require 'nezu/runtime/producer'
 
 $: << File.expand_path('./lib')
 $: << File.expand_path('./app')
@@ -15,7 +17,15 @@ $: << File.expand_path('.')
 
 Signal.trap("INT") { connection.close { EventMachine.stop } ; exit}
 
-require 'config/boot'
+module Nezu
+  def self.try(&block)
+    yield
+  rescue Exception => e
+    nil
+  end
+end
+
+Nezu.try {require 'config/boot'}
 
 Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   yaml = YAML.load_file(yaml_file)[Nezu.env]
@@ -28,7 +38,7 @@ module Nezu
   class Runner
     def initialize
       puts "[Nezu Runner] initialize...."
-      require 'config/application'
+      Nezu.try {require 'config/application'}
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
         Nezu::Runtime::Consumer.descendants.each do |consumer|

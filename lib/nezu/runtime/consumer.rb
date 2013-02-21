@@ -16,9 +16,24 @@ module Nezu
       def handle_message(metadata, payload)
         params = JSON.parse(payload)
         action = params.delete('__action')
+        recipient = Nezu::Runtime::Recipient.new(params.delete('__reply_to'))
         self.send(action.to_sym, params)
+        recipient.push!(response)
       end
     end
   end
 end
+
+
+#class WebApp<Nezu::Runtime::Producer ; end
+
+#params['__respond_to'] # talkyoo.web_aap => WebAap
+
+#class Numberman<Nezu::Runtime::Producer ; end
+
+#Numberman.produce!(params)
+
+#Thread.new do
+  #abbonier_irgenwelche_queues
+#end
 

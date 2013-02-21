@@ -8,6 +8,13 @@ ENV['NEZU_ENV'] = 'test'
 SPEC_TMP_DIR = "#{Dir.pwd}/spec/support/tmp"
 
 require 'nezu'
+require 'amqp'
+require "bunny"
+require 'json'
+require 'nezu/runtime/worker'
+require 'nezu/runtime/consumer'
+require 'nezu/runtime/producer'
+require 'nezu/generators'
 require 'debugger'
 require 'rspec'
 require 'rspec/autorun'

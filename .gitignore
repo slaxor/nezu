@@ -9,3 +9,5 @@ spec/debug.log
 spec/*.db
 TODO
 log/
+tmp/
+

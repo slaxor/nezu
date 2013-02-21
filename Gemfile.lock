@@ -5,6 +5,7 @@ PATH
       active_support
       activerecord
       amqp
+      bunny (>= 0.9.0.pre6)
       configatron
 
 GEM
@@ -22,19 +23,21 @@ GEM
       arel (~> 1.0.0)
       tzinfo (~> 0.3.23)
     activesupport (3.0.0)
-    amq-client (0.9.11)
-      amq-protocol (>= 1.0.1)
+    amq-client (0.9.12)
+      amq-protocol (>= 1.2.0)
       eventmachine
     amq-protocol (1.2.0)
-    amqp (0.9.8)
-      amq-client (~> 0.9.5)
-      amq-protocol (>= 0.9.4)
+    amqp (0.9.9)
+      amq-client (~> 0.9.12)
+      amq-protocol (~> 1.2.0)
       eventmachine
     arel (1.0.1)
       activesupport (~> 3.0.0)
     bourne (1.1.2)
       mocha (= 0.10.5)
     builder (2.1.2)
+    bunny (0.9.0.pre7)
+      amq-protocol (>= 1.2.0)
     columnize (0.3.6)
     configatron (2.10.0)
       yamler (>= 0.1.0)

@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.description = %q{Skel generator and launcher for amqp consumers.}
 
   s.add_dependency             'amqp'
+  s.add_dependency             'bunny', '>= 0.9.0.pre6'
   s.add_dependency             'activerecord'
   s.add_dependency             'active_support'
   s.add_dependency             'configatron'
