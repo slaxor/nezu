@@ -16,9 +16,9 @@ module Nezu
       def handle_message(metadata, payload)
         params = JSON.parse(payload)
         action = params.delete('__action')
-        recipient = Nezu::Runtime::Recipient.new(params.delete('__reply_to'))
-        self.send(action.to_sym, params)
-        recipient.push!(response)
+        reply_to = params.delete('__reply_to')
+        response = self.send(action.to_sym, params)
+        Nezu::Runtime::Recipient.new(reply_to).push!(response)
       end
     end
   end
