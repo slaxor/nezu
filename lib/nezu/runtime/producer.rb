@@ -19,12 +19,8 @@ module Nezu
         conn.start
         ch = conn.create_channel
         q  = ch.queue(queue_name)
-        #e  = ch.default_exchange
-        #e.publish("Hello, everybody!", :routing_key => 'test1')
-        #e.publish(params.to_json)
+        
         q.publish(params.to_json)
-        #delivery_info, metadata, payload = q.pop
-        #puts "This is the message: #{payload}"
         conn.stop
       end
     end
