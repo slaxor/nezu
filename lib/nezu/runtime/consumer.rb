@@ -24,16 +24,3 @@ module Nezu
   end
 end
 
-
-#class WebApp<Nezu::Runtime::Producer ; end
-
-#params['__respond_to'] # talkyoo.web_aap => WebAap
-
-#class Numberman<Nezu::Runtime::Producer ; end
-
-#Numberman.produce!(params)
-
-#Thread.new do
-  #abbonier_irgenwelche_queues
-#end
-

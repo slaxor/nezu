@@ -8,11 +8,11 @@ require 'json'
 require 'nezu/runtime/worker'
 require 'nezu/runtime/consumer'
 require 'nezu/runtime/producer'
+require 'nezu/runtime/recipient'
 
 $: << File.expand_path('./lib')
 $: << File.expand_path('./app')
 $: << File.expand_path('.')
-#$:.unshift(File.expand_path("../../lib", __FILE__))
 
 
 Signal.trap("INT") { connection.close { EventMachine.stop } ; exit}
