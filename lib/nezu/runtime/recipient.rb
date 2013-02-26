@@ -2,7 +2,7 @@ module Nezu
   module Runtime
     class Recipient
       def self.new(q)
-        Nezu::Runtime::Producer.descendants.select {|producer| producer.queue_name == q}[0] # || (raise RecipientError.does_not_exist(q))
+        Nezu::Runtime::Producer.descendants.select {|producer| producer.queue_name == q}[0] #|| (raise RecipientError.does_not_exist(q))
       end
     end
 

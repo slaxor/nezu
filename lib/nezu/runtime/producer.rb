@@ -19,7 +19,6 @@ module Nezu
         conn.start
         ch = conn.create_channel
         q  = ch.queue(queue_name)
-        
         q.publish(params.to_json)
         conn.stop
       end

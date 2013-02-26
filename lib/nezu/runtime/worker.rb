@@ -10,7 +10,7 @@ module Nezu
       end
 
       def start
-        @queue = @channel.queue(@queue_name, :exclusive => true)
+        @queue = @channel.queue(@queue_name, :exclusive => false)
         @queue.subscribe(&@consumer.method(:handle_message))
       end
 

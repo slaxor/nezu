@@ -25,20 +25,18 @@ module Nezu
   end
 end
 
-Nezu.try {require 'config/boot'}
-
 Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   yaml = YAML.load_file(yaml_file)[Nezu.env]
   configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
 end
 
-puts "[Nezu Runner] starting..."
+puts "[Nezu Runner] initializing..."
 
 module Nezu
   class Runner
     def initialize
       puts "[Nezu Runner] initialize...."
-      Nezu.try {require 'config/application'}
+      Nezu.try {require "config/nezu"}
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
         Nezu::Runtime::Consumer.descendants.each do |consumer|
@@ -50,5 +48,5 @@ module Nezu
   end
 end
 
-puts "[Nezu Runner] Ready"
+puts "[Nezu Runner] ready"
 
