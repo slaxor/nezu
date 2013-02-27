@@ -21,7 +21,9 @@ module Nezu
         response = self.send(action.to_sym, params)
         if reply_to
           response.reverse_merge!('__action' => "#{action}_result")
-          Nezu::Runtime::Recipient.new(reply_to).push!(response)
+          recipient = Nezu::Runtime::Recipient.new(reply_to)
+          Nezu::LOGGER.info("sending answer of #{action} to #{recipient}")
+          recipient.push!(response)
         end
       end
     end
