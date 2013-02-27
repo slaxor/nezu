@@ -8,6 +8,7 @@ require 'configatron'
 
 module Nezu
   configatron.gem_base_dir = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+  LOGGER = Logger.new("log/nezu.log")
   def self.env
     Env.new(ENV['NEZU_ENV']||'development')
   end
