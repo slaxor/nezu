@@ -15,7 +15,7 @@ module Nezu
 
       def handle_message(metadata, payload)
         puts "[NEZU Consumer] payload: #{payload}"
-        params = JSON.parse(payload)
+        params = JSON.parse(payload.to_s)
         action = params.delete('__action')
         reply_to = params.delete('__reply_to')
         response = self.send(action.to_sym, params)
