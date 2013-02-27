@@ -10,6 +10,7 @@ module Nezu
       end
 
       def start
+        puts "[Nezu Worker] #{@queue_name}"
         @queue = @channel.queue(@queue_name, :exclusive => false)
         @queue.subscribe(&@consumer.method(:handle_message))
       end

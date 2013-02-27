@@ -38,8 +38,11 @@ module Nezu
       puts "[Nezu Runner] initialize...."
       Nezu.try {require "config/nezu"}
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
+        puts "[Nezu Runner] AMQP connection #{configatron.amqp.url}"
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
+        puts "[Nezu Runner] AMQP channel #{channel}"
         Nezu::Runtime::Consumer.descendants.each do |consumer|
+          puts "[Nezu Runner] Consumer.descendants: ##{consumer.to_s}"
           worker = Nezu::Runtime::Worker.new(channel, consumer.new)
           worker.start
         end
