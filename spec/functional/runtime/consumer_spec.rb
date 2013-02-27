@@ -9,6 +9,19 @@ describe Nezu::Runtime::Consumer do
     end
   end
 
+  describe '#handle_message' do
+    before do
+      class Consumer1 < Nezu::Runtime::Consumer;end
+      @consumer = Consumer1.new
+    end
+
+    it 'should ' do
+      reply_to = 'foo'
+      Nezu::Runtime::Recipient.should.receive(:new).with(reply_to)
+      @consumer.handle_message('{"meta": "not_used"}', %Q{"__action" : "bar", "__reply_to": #{reply_to}})
+    end
+  end
+
   describe '::queue_name' do
     it 'should return its translated class name' do
       module JustAModule;class Consumer1<Nezu::Runtime::Consumer;end;end

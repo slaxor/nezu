@@ -19,7 +19,10 @@ module Nezu
         action = params.delete('__action')
         reply_to = params.delete('__reply_to')
         response = self.send(action.to_sym, params)
-        Nezu::Runtime::Recipient.new(reply_to).push!(response)
+        if reply_to
+          response.reverse_merge!('__action' => "#{action}_result")
+          Nezu::Runtime::Recipient.new(reply_to).push!(response)
+        end
       end
     end
   end
