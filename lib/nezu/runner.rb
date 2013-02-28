@@ -47,6 +47,8 @@ module Nezu
           worker.start
         end
       end
+    rescue => e
+      Nezu::LOGGER.crit(e)
     end
   end
 end
