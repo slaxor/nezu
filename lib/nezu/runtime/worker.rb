@@ -16,7 +16,7 @@ module Nezu
       end
 
       def handle_channel_exception(channel, channel_close)
-        Nezu::LOGGER.crit("Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}")
+        Nezu::LOGGER.error("Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}")
       end # handle_channel_exception(channel, channel_close)
     end
   end

@@ -48,7 +48,7 @@ module Nezu
         end
       end
     rescue => e
-      Nezu::LOGGER.crit(e)
+      Nezu::LOGGER.error(e)
     end
   end
 end
