@@ -14,16 +14,16 @@ module Nezu
       end
 
       def handle_message(metadata, payload)
-        puts "[NEZU Consumer] payload: #{payload}"
+        Nezu::LOGGER.debug("NEZU Consumer[#{self.class}] payload: #{payload}")
         params = JSON.parse(payload.to_s)
         action = params.delete('__action')
         reply_to = params.delete('__reply_to')
-        response = self.send(action.to_sym, params)
+        result = self.send(action.to_sym, params)
         if reply_to
-          response.reverse_merge!('__action' => "#{action}_result")
+          result.reverse_merge!('__action' => "#{action}_result")
           recipient = Nezu::Runtime::Recipient.new(reply_to)
-          Nezu::LOGGER.info("sending answer of #{action} to #{recipient}")
-          recipient.push!(response)
+          Nezu::LOGGER.debug("sending result #{result}of #{action} to #{recipient}")
+          recipient.push!(result)
         end
       end
     end

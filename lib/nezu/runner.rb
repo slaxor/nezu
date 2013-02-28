@@ -30,19 +30,19 @@ Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
 end
 
-puts "[Nezu Runner] initializing..."
+Nezu::LOGGER.info("[Nezu Runner] initializing...")
 
 module Nezu
   class Runner
     def initialize
-      puts "[Nezu Runner] initialize...."
+      Nezu::LOGGER.debug("[Nezu Runner] initialize....")
       Nezu.try {require "config/nezu"}
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
-        puts "[Nezu Runner] AMQP connection #{configatron.amqp.url}"
+        Nezu::LOGGER.debug("[Nezu Runner] AMQP connection #{configatron.amqp.url}")
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
-        puts "[Nezu Runner] AMQP channel #{channel}"
+        Nezu::LOGGER.debug("[Nezu Runner] AMQP channel #{channel}")
         Nezu::Runtime::Consumer.descendants.each do |consumer|
-          puts "[Nezu Runner] Consumer.descendants: ##{consumer.to_s}"
+          Nezu::LOGGER.debug("[Nezu Runner] Consumer.descendants: ##{consumer.to_s}")
           worker = Nezu::Runtime::Worker.new(channel, consumer.new)
           worker.start
         end
@@ -53,5 +53,5 @@ module Nezu
   end
 end
 
-puts "[Nezu Runner] ready"
+Nezu::LOGGER.info("[Nezu Runner] ready")
 
