@@ -29,6 +29,7 @@ module Nezu
       formatted_time = time.strftime(TIME_FORMAT) << time.usec.to_s[0..2].rjust(3)
       color = SEVERITY_TO_COLOR_MAP[severity]
       if msg.kind_of?(Exception)
+        "#{formatted_time} #{HOST} #{APP}[#{$$}][\033[#{color}m#{formatted_severity}\033[0m] #{msg.to_s}\n" + 
         msg.backtrace.map do |bt_line|
           "#{formatted_time} #{HOST} #{APP}[#{$$}][\033[#{color}m#{formatted_severity}\033[0m] #{bt_line.strip}"
         end.join("\n")
@@ -48,7 +49,7 @@ module Nezu
   def self.try(&block)
     yield
   rescue Exception => e
-    Nezu::LOGGER.warn("Nezu.try failed")
+    Nezu::LOGGER.warn("[Nezu Runner] Nezu.try failed")
     Nezu::LOGGER.warn(e)
   end
 end
