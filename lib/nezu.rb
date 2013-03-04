@@ -5,10 +5,9 @@ require 'yaml'
 require 'active_support/core_ext'
 require 'active_record'
 require 'configatron'
-
 module Nezu
   configatron.gem_base_dir = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  LOGGER = Logger.new("log/nezu.log")
+
   def self.env
     Env.new(ENV['NEZU_ENV']||'development')
   end
@@ -20,6 +19,13 @@ module Nezu
 
     def respond_to?(meth, params=nil)
       !!meth.to_s.match(/\?$/)
+    end
+  end
+
+  class Error < Exception
+    def new(e,msg)
+      Nezu::LOGGER.error(e.to_s)
+      e.backtrace.each {|bt_line| Nezu::LOGGER.error(bt_line)}
     end
   end
 end

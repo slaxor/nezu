@@ -10,6 +10,7 @@ require 'nezu'
 require 'amqp'
 require "bunny"
 require 'json'
+require 'nezu/runner'
 require 'nezu/runtime/worker'
 require 'nezu/runtime/consumer'
 require 'nezu/runtime/producer'

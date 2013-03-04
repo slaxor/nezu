@@ -25,6 +25,9 @@ module Nezu
           Nezu::LOGGER.debug("sending result #{result}of #{action} to #{recipient}")
           recipient.push!(result)
         end
+      rescue NoMethodError => e
+        Nezu::LOGGER.error(e.to_s)
+        e.backtrace.each {|bt_line| Nezu::LOGGER.error(bt_line)}
       end
     end
   end

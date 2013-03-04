@@ -18,10 +18,38 @@ $: << File.expand_path('.')
 Signal.trap("INT") { connection.close { EventMachine.stop } ; exit}
 
 module Nezu
+  class CustomLogFormatter
+    SEVERITY_TO_COLOR_MAP = {'DEBUG'=>'0;37', 'INFO'=>'32', 'WARN'=>'33', 'ERROR'=>'31', 'FATAL'=>'31', 'UNKNOWN'=>'37'}
+    TIME_FORMAT = "%Y-%m-%d %H:%M:%S."
+    HOST = %x(hostname).chomp
+    APP = File.basename(Dir.pwd)
+
+    def call(severity, time, progname, msg)
+      formatted_severity = sprintf("%-5s","#{severity}")
+      formatted_time = time.strftime(TIME_FORMAT) << time.usec.to_s[0..2].rjust(3)
+      color = SEVERITY_TO_COLOR_MAP[severity]
+      if msg.kind_of?(Exception)
+        msg.backtrace.map do |bt_line|
+          "#{formatted_time} #{HOST} #{APP}[#{$$}][\033[#{color}m#{formatted_severity}\033[0m] #{bt_line.strip}"
+        end.join("\n")
+      else
+        "#{formatted_time} #{HOST} #{APP}[#{$$}][\033[#{color}m#{formatted_severity}\033[0m] #{msg.strip}\n"
+      end
+    end
+  end
+  log_target = {
+    'development' => STDOUT,
+    'test' => nil,
+    'production' => File.expand_path(File.join('log/', 'nezu.log'))
+  }
+  LOGGER = Logger.new(log_target[Nezu.env])
+  LOGGER.formatter = CustomLogFormatter.new
+
   def self.try(&block)
     yield
   rescue Exception => e
-    nil
+    Nezu::LOGGER.warn("Nezu.try failed")
+    Nezu::LOGGER.warn(e)
   end
 end
 
@@ -47,8 +75,9 @@ module Nezu
           worker.start
         end
       end
-    rescue => e
-      Nezu::LOGGER.error(e)
+    #rescue => e
+      #Nezu::LOGGER.error(e)
+      #self.class.new
     end
   end
 end

@@ -12,13 +12,14 @@ describe Nezu::Runtime::Consumer do
   describe '#handle_message' do
     before do
       class Consumer1 < Nezu::Runtime::Consumer;end
+      Consumer1.any_instance.should_receive(:send).any_number_of_times.and_return({a: 'hash', with: 'no real_value'})
       @consumer = Consumer1.new
     end
 
-    it 'should ' do
-      reply_to = 'foo'
-      Nezu::Runtime::Recipient.should.receive(:new).with(reply_to)
-      @consumer.handle_message('{"meta": "not_used"}', %Q{"__action" : "bar", "__reply_to": #{reply_to}})
+    it 'should honor "__reply_to"' do
+      reply_to = 'example_producer'
+      Nezu::Runtime::Recipient.should_receive(:new).with(reply_to)
+      @consumer.handle_message('{"meta": "not_used"}', %Q({"__action":"bar","__reply_to":"#{reply_to}"}))
     end
   end
 

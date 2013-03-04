@@ -19,7 +19,7 @@ module Nezu
         conn.start
         ch = conn.create_channel
         q  = ch.queue(queue_name)
-        q.publish(params.to_json)
+        q.publish(params.to_json, :content_type => 'application/json')
         conn.stop
       end
     end
