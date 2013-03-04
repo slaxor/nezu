@@ -43,7 +43,6 @@ module Nezu
     'test' => nil,
     'production' => File.expand_path(File.join('log/', 'nezu.log'))
   }
-  puts "[Nezu] Logger: #{log_target[Nezu.env]}"
   LOGGER = Logger.new(log_target[Nezu.env])
   LOGGER.formatter = CustomLogFormatter.new
 
