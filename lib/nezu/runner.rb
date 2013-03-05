@@ -59,10 +59,9 @@ Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
 end
 
-puts "CONFIGATRON yaml: #{configatron.inspect}"
-puts "CONFIGATRON yaml: #{configatron.to_s}"
-puts "CONFIGATRON yaml: #{configatron.database.inspect}"
 puts "CONFIGATRON yaml: #{configatron.database.to_s}"
+puts "CONFIGATRON yaml: #{configatron.database.present?}"
+puts "CONFIGATRON yaml: #{configatron.florian.present?}"
 raise "ENDDDDDDDD"
 
 if configatron.database.present?
