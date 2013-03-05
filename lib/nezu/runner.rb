@@ -62,7 +62,6 @@ end
 puts "CONFIGATRON yaml: #{configatron}"
 puts "CONFIGATRON yaml: #{configatron.database}"
 raise "ENDDDDDDDD"
-return false
 
 if configatron.database.present?
   ActiveRecord::Base.establish_connection(
