@@ -19,3 +19,14 @@ require 'debugger'
 require 'rspec'
 require 'rspec/autorun'
 
+# a stupid class that eats everything, for stubbing
+class AlwaysHappy
+  def self.method_missing(m,*p)
+    self.new
+  end
+
+  def method_missing(m,*p)
+    self.class.new
+  end
+end
+
