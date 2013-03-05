@@ -59,11 +59,6 @@ Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
 end
 
-puts "CONFIGATRON yaml: #{configatron.database.to_s}"
-puts "CONFIGATRON yaml: #{configatron.database.present?}"
-puts "CONFIGATRON yaml: #{configatron.florian.present?}"
-raise "ENDDDDDDDD"
-
 if configatron.database.present?
   ActiveRecord::Base.establish_connection(
     :adapter  => configatron.database.adapter,
@@ -74,6 +69,7 @@ if configatron.database.present?
     :encoding => configatron.database.encoding,
     :socket   => configatron.database.socket
   )
+  ActiveRecord::Base.logger = Logger.new(File.expand_path(File.join('log/', 'database.log')))
 end
 
 
