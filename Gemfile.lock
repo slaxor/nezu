@@ -1,12 +1,13 @@
 PATH
   remote: .
   specs:
-    nezu (0.4.11)
+    nezu (0.4.14)
       activerecord (~> 3.2.11)
       activesupport (~> 3.2.11)
       amqp
       bunny (>= 0.9.0.pre6)
       configatron
+      mysql2
 
 GEM
   remote: https://rubygems.org/
@@ -26,7 +27,7 @@ GEM
       amq-protocol (>= 1.2.0)
       eventmachine
     amq-protocol (1.2.0)
-    amqp (0.9.9)
+    amqp (0.9.10)
       amq-client (~> 0.9.12)
       amq-protocol (~> 1.2.0)
       eventmachine
@@ -49,6 +50,7 @@ GEM
     i18n (0.6.4)
     json (1.7.7)
     multi_json (1.6.1)
+    mysql2 (0.3.11)
     rake (10.0.3)
     rdoc (3.12.2)
       json (~> 1.4)
