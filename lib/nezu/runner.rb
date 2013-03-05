@@ -59,6 +59,24 @@ Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
   configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
 end
 
+puts "CONFIGATRON yaml: #{configatron}"
+puts "CONFIGATRON yaml: #{configatron.database}"
+raise "ENDDDDDDDD"
+return false
+
+if configatron.database.present?
+  ActiveRecord::Base.establish_connection(
+    :adapter  => configatron.database.adapter,
+    :host     => configatron.database.host,
+    :username => configatron.database.username,
+    :password => configatron.database.password,
+    :database => configatron.database.database,
+    :encoding => configatron.database.encoding,
+    :socket   => configatron.database.socket
+  )
+end
+
+
 Nezu::LOGGER.info("[Nezu Runner] initializing...")
 
 module Nezu
