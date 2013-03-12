@@ -29,7 +29,7 @@ module Nezu
       formatted_time = time.strftime(TIME_FORMAT) << time.usec.to_s[0..2].rjust(3)
       color = SEVERITY_TO_COLOR_MAP[severity]
       if msg.kind_of?(Exception)
-        "#{formatted_time} #{HOST} #{APP}[#{$$}][\033[#{color}m#{formatted_severity}\033[0m] #{msg.to_s}\n" + 
+        "#{formatted_time} #{HOST} #{APP}[#{$$}][\033[#{color}m#{formatted_severity}\033[0m] #{msg.to_s}\n" +
         msg.backtrace.map do |bt_line|
           "#{formatted_time} #{HOST} #{APP}[#{$$}][\033[#{color}m#{formatted_severity}\033[0m] #{bt_line.strip}"
         end.join("\n")
@@ -60,15 +60,7 @@ Dir.glob(File.join('config', '*.yml')).each do |yaml_file|
 end
 
 if configatron.database.present?
-  ActiveRecord::Base.establish_connection(
-    :adapter  => configatron.database.adapter,
-    :host     => configatron.database.host,
-    :username => configatron.database.username,
-    :password => configatron.database.password,
-    :database => configatron.database.database,
-    :encoding => configatron.database.encoding,
-    :socket   => configatron.database.socket
-  )
+  ActiveRecord::Base.establish_connection(configatron.database.to_hash)
   ActiveRecord::Base.logger = Logger.new(File.expand_path(File.join('log/', 'database.log')))
 end
 

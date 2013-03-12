@@ -2,8 +2,8 @@
 Gem::Specification.new do |s|
   s.name        = "nezu"
   s.version     = File.read(File.join(File.dirname(__FILE__), 'VERSION'))
-  s.authors     = ["Sascha Teske"]
-  s.email       = %q{sascha.teske@gmail.com}
+  s.authors     = ["Sascha Teske", "Florian Görsdorf"]
+  s.email       = %q{sascha.teske@gmail.com fgoersdorf@gmail.com}
   s.homepage    = %q{http://github.com/slaxor/nezu}
   s.summary     = %q{Skel generator and launcher for amqp consumers}
   s.description = %q{Skel generator and launcher for amqp consumers.}

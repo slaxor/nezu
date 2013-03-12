@@ -31,12 +31,18 @@ module Nezu
       Nezu::Runner.new
       exit(0)
     end
+
+    def self.console(*params)
+      puts %Q(Starting console...)
+      require 'nezu/runner'
+      ARGV.clear
+      IRB.start()
+    end
   end
 end
 
 
 Nezu::CLI.send(ARGV.shift, ARGV)
-
 
 
 
