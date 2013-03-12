@@ -1,4 +1,7 @@
 class <%= name_space %> < Nezu::Runtime::Consumer
-  #your app code here
+  def ping(*params)
+    Nezu::LOGGER.info("Action: ping received params #{params}")
+    params
+  end
 end
 
