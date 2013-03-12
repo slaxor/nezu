@@ -7,9 +7,14 @@ require 'active_record'
 require 'configatron'
 module Nezu
   configatron.gem_base_dir = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+  configatron.app_base_dir = File.expand_path(Dir.pwd)
 
   def self.env
     Env.new(ENV['NEZU_ENV']||'development')
+  end
+
+  def self.root
+    Root::PATH
   end
 
   class Env < String
@@ -19,6 +24,14 @@ module Nezu
 
     def respond_to?(meth, params=nil)
       !!meth.to_s.match(/\?$/)
+    end
+  end
+
+  class Root < String
+    PATH = self.new(configatron.app_base_dir)
+
+    def join(*params)
+      File.join(PATH, params)
     end
   end
 
