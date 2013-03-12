@@ -15,11 +15,11 @@ $: << File.expand_path('./app')
 $: << File.expand_path('.')
 
 
-Signal.trap("INT") { connection.close { EventMachine.stop } ; exit}
+Signal.trap("INT") { Nezu::Runner.connection.close { EventMachine.stop } ; exit}
 
 module Nezu
   class CustomLogFormatter
-    SEVERITY_TO_COLOR_MAP = {'DEBUG'=>'0;37', 'INFO'=>'32', 'WARN'=>'33', 'ERROR'=>'31', 'FATAL'=>'31', 'UNKNOWN'=>'37'}
+    SEVERITY_TO_COLOR_MAP = {'DEBUG'=>'0;37', 'INFO'=>'32', 'WARN'=>'33', 'ERROR'=>'31', 'FATAL'=>'95;7;1', 'UNKNOWN'=>'37'}
     TIME_FORMAT = "%Y-%m-%d %H:%M:%S."
     HOST = %x(hostname).chomp
     APP = File.basename(Dir.pwd)
@@ -81,10 +81,16 @@ module Nezu
           worker = Nezu::Runtime::Worker.new(channel, consumer.new)
           worker.start
         end
+        @@connection = connection
       end
-    #rescue => e
-      #Nezu::LOGGER.error(e)
-      #self.class.new
+    rescue => e
+      Nezu::LOGGER.fatal("#{self.inspect} died restarting")
+      Nezu::LOGGER.fatal(e)
+      self.class.new
+    end
+
+    def self.connection
+      @@connection
     end
   end
 end
