@@ -1,5 +1,6 @@
 Signal.trap("INT") { puts; exit(1) }
-
+require 'nezu'
+Nezu.load_config
 module Nezu
   module CLI
     def self.help(*params)
@@ -27,14 +28,13 @@ module Nezu
 
     def self.run(*params)
       puts %Q(Starting app...)
-      require 'nezu/runner'
+      require 'nezu'
       Nezu::Runner.new
       exit(0)
     end
 
     def self.console(*params)
       puts %Q(Starting console...)
-      require 'nezu/runner'
       ARGV.clear
       IRB.start()
     end

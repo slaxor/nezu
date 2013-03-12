@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nezu (0.4.16)
+    nezu (0.4.17)
       activerecord (~> 3.2.11)
       activesupport (~> 3.2.11)
       amqp
@@ -46,7 +46,7 @@ GEM
       debugger-ruby_core_source (>= 1.1.1)
     debugger-ruby_core_source (1.2.0)
     diff-lcs (1.2.1)
-    eventmachine (1.0.1)
+    eventmachine (1.0.3)
     i18n (0.6.4)
     json (1.7.7)
     multi_json (1.6.1)
