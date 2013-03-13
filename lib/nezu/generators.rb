@@ -5,7 +5,7 @@ require 'nezu/generators/application/app_generator'
 module Nezu
   module Generators
 
-    configatron.template_paths = [File.join(Nezu::GEM_DIR, 'lib/nezu/generators/application/templates')] + ENV['NEZU_TEMPLATES'].to_s.split(':')
+    configatron.template_paths = [Nezu.gem_path.join('lib/nezu/generators/application/templates')] + ENV['NEZU_TEMPLATES'].to_s.split(':')
     configatron.file_suffixes = %w(tt)
 
     def template_to(filename) # e.g. "config/amqp.yml"
