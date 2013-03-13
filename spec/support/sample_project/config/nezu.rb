@@ -7,5 +7,7 @@ Dir.glob("**/*.rb").each do |f|
   require f
 end
 
+require 'producers/pong'
+
 LOGGER = Logger.new('log/SampleProject.log')
 

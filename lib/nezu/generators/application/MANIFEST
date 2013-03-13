@@ -6,9 +6,10 @@ app/consumers/$app_name.rb.tt
 app/consumers/.gitkeep
 app/models/.gitkeep
 app/producers/.gitkeep
+app/producers/pong.rb.tt
 config/amqp.yml.tt
 config/boot.rb.tt
-config/database.yml.tt
+config/database.yml.example.tt
 config/initializers/.gitkeep
 config/nezu.rb.tt
 db/.gitkeep

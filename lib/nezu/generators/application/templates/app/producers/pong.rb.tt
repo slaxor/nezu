@@ -1,0 +1,3 @@
+class Pong < Nezu::Runtime::Producer
+end
+
