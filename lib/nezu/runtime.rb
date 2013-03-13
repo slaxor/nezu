@@ -1,6 +1,7 @@
 require 'amqp'
 require "bunny"
 require 'json'
+
 module Nezu
   module Runtime
   end

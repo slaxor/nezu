@@ -1,4 +1,3 @@
-Signal.trap("INT") { puts; exit(1) }
 require 'nezu'
 Nezu.load_config
 module Nezu
@@ -10,6 +9,7 @@ module Nezu
 
         "#{script_name} new <appname>" for an app skeleton dir in <appname>
         "#{script_name} run" inside an app dir to start it
+        "#{script_name} console" inside an app dir to get an irb shell with your current env loaded
 
       ).gsub(/^\s*/, '')
       exit(1)
@@ -28,7 +28,6 @@ module Nezu
 
     def self.run(*params)
       puts %Q(Starting app...)
-      require 'nezu'
       Nezu::Runner.new
       exit(0)
     end
@@ -41,9 +40,5 @@ module Nezu
   end
 end
 
-
 Nezu::CLI.send(ARGV.shift, ARGV)
-
-
-
 

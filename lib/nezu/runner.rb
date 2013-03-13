@@ -1,11 +1,4 @@
 #!/usr/bin/env ruby
-require 'amqp'
-require "bunny"
-require 'json'
-#require 'nezu/runtime/worker'
-#require 'nezu/runtime/consumer'
-#require 'nezu/runtime/producer'
-#require 'nezu/runtime/recipient'
 
 $: << File.expand_path('./lib')
 $: << File.expand_path('./app')
@@ -15,6 +8,8 @@ Signal.trap("INT") { Nezu::Runner.connection.close { EventMachine.stop } ; exit}
 
 module Nezu
   class Runner
+    # this is the starting point for every application running with "$> nezu run"
+    # it get called from cli.rb
     def initialize
       Nezu.load_config
       Nezu.logger.debug("[Nezu Runner] initialize....")
