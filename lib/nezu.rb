@@ -11,8 +11,6 @@ require 'nezu/runtime'
 module Nezu
   mattr_accessor :logger
 
-  GEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-
   #used by Nezu.env and Nezu.env.developent? etc.
   class Env < String
     def method_missing(meth, params=nil) #:nodoc:
@@ -28,11 +26,12 @@ module Nezu
 
   class Root < String
     APP_PATH = self.new(File.expand_path(Dir.pwd))
+    GEM_PATH = self.new(File.expand_path(File.join(File.dirname(__FILE__), '..')))
 
     # you can do Nezu.root.join('path', 'to', 'your', 'stuff') and get the
     # absolute path of your stuff
     def join(*params)
-      File.join(APP_PATH, params)
+      File.join(self, params)
     end
   end
 
@@ -104,6 +103,11 @@ module Nezu
   # Returns a String like object with the applications absolute root
   def self.root
     Root::APP_PATH
+  end
+
+  # Returns a String like object with the gems absolute root
+  def self.gem_path
+    Root::GEM_PATH
   end
 
   # turn errors into warnings if used in verbose mode (Nezu.try(true) { ... })
