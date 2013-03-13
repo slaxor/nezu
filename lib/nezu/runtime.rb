@@ -15,16 +15,23 @@ module Nezu
         raise
       end
 
-      if configatron.database.present?
+      if configatron.database.present? && !Class.const_defined?(:Rails)
         ActiveRecord::Base.establish_connection(configatron.database.to_hash)
         ActiveRecord::Base.logger = Logger.new(File.expand_path(File.join('log/', 'database.log')))
       end
-      require 'nezu/runtime'
-      (Dir.glob(Nezu.root.join('app', '**', '*.rb')) + Dir.glob(Nezu.root.join('lib', '**', '*.rb'))).each do |file_name|
+
+      req_files = Dir.glob(Nezu.root.join('app', 'consumers', '*.rb'))
+      req_files += Dir.glob(Nezu.root.join('app', 'producers', '*.rb'))
+      unless Class.const_defined?(:Rails)
+        req_files += Dir.glob(Nezu.root.join('app', 'models', '*.rb'))
+        req_files += Dir.glob(Nezu.root.join('lib', '**', '*.rb'))
+      end
+       req_files.each do |file_name|
         require file_name #Autoload is not thread-safe :(
       end
       Nezu.try {require "config/nezu"}
       Nezu.logger.debug("[Nezu Runner] config loaded")
+      Nezu.logger.debug(configatron.amqp)
     end
 
     private
