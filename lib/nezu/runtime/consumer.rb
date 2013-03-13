@@ -1,7 +1,7 @@
 module Nezu
   module Runtime
     class Consumer
-      def self.inherited(subclass)
+      def self.inherited(subclass) #:nodoc:
         subclass.class_eval {cattr_accessor :queue_name}
         subclass.queue_name = ''
         subclass.queue_name << "#{configatron.amqp.queue_prefix}." unless configatron.amqp.queue_prefix.nil?
@@ -14,7 +14,7 @@ module Nezu
       end
 
       def handle_message(metadata, payload)
-        Nezu::LOGGER.debug("NEZU Consumer[#{self.class}] payload: #{payload}")
+        Nezu.logger.debug("NEZU Consumer[#{self.class}] payload: #{payload}")
         params = JSON.parse(payload.to_s)
         action = params.delete('__action')
         reply_to = params.delete('__reply_to')
@@ -22,12 +22,14 @@ module Nezu
         if reply_to
           result.reverse_merge!('__action' => "#{action}_result")
           recipient = Nezu::Runtime::Recipient.new(reply_to)
-          Nezu::LOGGER.debug("sending result #{result}of #{action} to #{recipient}")
+          Nezu.logger.debug("sending result #{result}of #{action} to #{recipient}")
           recipient.push!(result)
         end
+      rescue JSON::ParserError => e
+        Nezu.logger.error('Please send only json in the message body')
+        Nezu.logger.debug(e)
       rescue NoMethodError => e
-        Nezu::LOGGER.error(e.to_s)
-        e.backtrace.each {|bt_line| Nezu::LOGGER.error(bt_line)}
+        Nezu.logger.error(e)
       end
     end
   end

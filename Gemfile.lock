@@ -1,13 +1,14 @@
 PATH
   remote: .
   specs:
-    nezu (0.4.17)
+    nezu (0.4.18)
       activerecord (~> 3.2.11)
       activesupport (~> 3.2.11)
       amqp
       bunny (>= 0.9.0.pre6)
       configatron
       mysql2
+      term-ansicolor
 
 GEM
   remote: https://rubygems.org/
@@ -33,12 +34,12 @@ GEM
       eventmachine
     arel (3.0.2)
     builder (3.0.4)
-    bunny (0.9.0.pre7)
+    bunny (0.9.0.pre8)
       amq-protocol (>= 1.2.0)
     columnize (0.3.6)
     configatron (2.10.0)
       yamler (>= 0.1.0)
-    debugger (1.3.3)
+    debugger (1.4.0)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.1.1)
       debugger-ruby_core_source (~> 1.2.0)
@@ -58,14 +59,15 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    rspec-core (2.13.0)
+    rspec-core (2.13.1)
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.13.0)
     sdoc (0.3.20)
       json (>= 1.1.3)
       rdoc (~> 3.10)
-    tzinfo (0.3.36)
+    term-ansicolor (1.1.1)
+    tzinfo (0.3.37)
     yamler (0.1.0)
 
 PLATFORMS

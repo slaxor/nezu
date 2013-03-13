@@ -1,5 +1,4 @@
-Signal.trap("INT") { puts; exit(1) }
-
+require 'nezu'
 module Nezu
   module CLI
     def self.help(*params)
@@ -9,6 +8,7 @@ module Nezu
 
         "#{script_name} new <appname>" for an app skeleton dir in <appname>
         "#{script_name} run" inside an app dir to start it
+        "#{script_name} console" inside an app dir to get an irb shell with your current env loaded
 
       ).gsub(/^\s*/, '')
       exit(1)
@@ -28,22 +28,19 @@ module Nezu
     def self.run(*params)
       puts %Q(Starting app...)
       require 'nezu/runner'
-      Nezu::Runner.new
+      Nezu::Runtime.load_config
+      Nezu::Runner.start
       exit(0)
     end
 
     def self.console(*params)
       puts %Q(Starting console...)
-      require 'nezu/runner'
       ARGV.clear
+      Nezu::Runtime.load_config
       IRB.start()
     end
   end
 end
 
-
 Nezu::CLI.send(ARGV.shift, ARGV)
-
-
-
 
