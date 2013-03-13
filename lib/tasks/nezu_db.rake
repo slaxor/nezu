@@ -8,36 +8,25 @@ require 'debugger'
   #configatron.databases.configure_from_hash(yaml)
 #end
 
-def connect_to(env, without_db=false)
-  config = configatron.databases.send(env).to_hash
-  config.delete(:database) if without_db
-  @connection = ActiveRecord::Base.establish_connection(config)
-end
-
 namespace :nezu do
   db_namespace = namespace :db do
     task :load_config do
-      yaml = YAML.load_file(File.join(Nezu.root.join('config', 'database.yml')))
-      configatron.databases.configure_from_hash(yaml)
+      Nezu.logger.level = Logger::INFO
+      Nezu::Runtime.load_config
     end
 
     desc 'Create all the local databases defined in config/database.yml'
-    task :create do
-      begin
-        load_config
-        configatron.databases.to_hash.each do |k,v|
-          print "creating #{k}`s db (#{v}) ... "
-          connect_to(k, true)
-          ActiveRecord::Base.connection.create_database(v[:database])
+    task :create => [:load_config] do
+        databases = YAML.load_file(File.join(Nezu.root.join('config', 'database.yml'))).map {|k,v| v }.uniq
+        databases.each do |db|
+          print "creating #{db['database']}..."
+          ActiveRecord::Base.establish_connection(db.merge({'database' => nil}))
+          ActiveRecord::Base.connection.create_database(db['database']) rescue (puts 'ERROR'; next)
           puts 'done'
         end
-      rescue Mysql2::Error => e
-        puts "not done (#{e.to_s})"
-      end
     end
 
     task :migrate => [:load_config] do
-      connect_to(Nezu.env)
       if ENV['VERSION']
         db_namespace['migrate:down'].invoke
         db_namespace['migrate:up'].invoke
@@ -49,7 +38,7 @@ namespace :nezu do
     end
 
     desc 'Rolls the schema back to the previous version (specify steps w/ STEP=n).'
-    task :rollback => [:environment, :load_config] do
+    task :rollback => [:load_config] do
       connect_to(Nezu.env)
       step = ENV['STEP'] ? ENV['STEP'].to_i : 1
       ActiveRecord::Migrator.rollback(ActiveRecord::Migrator.migrations_paths, step)
@@ -61,7 +50,7 @@ namespace :nezu do
       #task :reset => ['db:drop', 'db:create', 'db:migrate']
 
       desc 'Runs the "up" for a given migration VERSION.'
-      task :up => [:environment, :load_config] do
+      task :up => [:load_config] do
         version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
         raise 'VERSION is required' unless version
         ActiveRecord::Migrator.run(:up, ActiveRecord::Migrator.migrations_paths, version)
@@ -69,7 +58,7 @@ namespace :nezu do
       end
 
       desc 'Runs the "down" for a given migration VERSION.'
-      task :down => [:environment, :load_config] do
+      task :down => [:load_config] do
         version = ENV['VERSION'] ? ENV['VERSION'].to_i : nil
         raise 'VERSION is required' unless version
         ActiveRecord::Migrator.run(:down, ActiveRecord::Migrator.migrations_paths, version)
@@ -77,7 +66,7 @@ namespace :nezu do
       end
 
       # desc  'Rollbacks the database one migration and re migrate up (options: STEP=x, VERSION=x).'
-      task :redo => [:environment, :load_config] do
+      task :redo => [:load_config] do
         if ENV['VERSION']
           db_namespace['migrate:down'].invoke
           db_namespace['migrate:up'].invoke
@@ -90,7 +79,7 @@ namespace :nezu do
 
     namespace :schema do
       desc 'Create a db/schema.rb file'
-      task :dump => [:environment, :load_config] do
+      task :dump => [:load_config] do
         require 'active_record/schema_dumper'
         connect_to(Nezu.env)
         filename = ENV['SCHEMA'] || "#{Nezu.root}/db/schema.rb"
