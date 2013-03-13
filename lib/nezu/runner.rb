@@ -9,8 +9,8 @@ module Nezu
     # this is the starting point for every application running with "$> nezu run"
     # it get called from cli.rb
     def self.start
-      AMQP.start(configatron.amqp.url) do |connection, open_ok|
-        Nezu.logger.debug("[Nezu Runner] AMQP connection #{configatron.amqp.url}")
+      AMQP.start(configatron.amqp.send(Nezu.env.to_sym).url) do |connection, open_ok|
+        Nezu.logger.debug("[Nezu Runner] AMQP connection #{configatron.amqp.send(Nezu.env.to_sym).url}")
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
         Nezu.logger.debug("[Nezu Runner] AMQP channel #{channel}")
         Nezu::Runtime::Consumer.descendants.each do |consumer|

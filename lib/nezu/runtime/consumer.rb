@@ -4,9 +4,9 @@ module Nezu
       def self.inherited(subclass) #:nodoc:
         subclass.class_eval {cattr_accessor :queue_name}
         subclass.queue_name = ''
-        subclass.queue_name << "#{configatron.amqp.queue_prefix}." unless configatron.amqp.queue_prefix.nil?
+        subclass.queue_name << "#{configatron.amqp.send(Nezu.env.to_sym).queue_prefix}." unless configatron.amqp.send(Nezu.env.to_sym).queue_prefix.nil?
         subclass.queue_name << subclass.to_s.gsub(/::/, '.').underscore
-        subclass.queue_name << ".#{configatron.amqp.queue_postfix}" unless configatron.amqp.queue_postfix.nil?
+        subclass.queue_name << ".#{configatron.amqp.send(Nezu.env.to_sym).queue_postfix}" unless configatron.amqp.send(Nezu.env.to_sym).queue_postfix.nil?
       end
 
       def self.descendants

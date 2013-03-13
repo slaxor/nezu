@@ -18,7 +18,7 @@ module Nezu
       if configatron.database.present? && !Class.const_defined?(:Rails)
         require configatron.database.adapter
         ActiveRecord::Base.establish_connection(configatron.database.to_hash)
-        ActiveRecord::Base.logger = Logger.new(File.expand_path(File.join('log/', 'database.log')))
+        ActiveRecord::Base.logger = Logger.new(Nezu.root.join('log/', 'database.log'))
       end
 
       req_files = Dir.glob(Nezu.root.join('app', 'consumers', '*.rb'))
@@ -38,7 +38,7 @@ module Nezu
     private
 
     def self.configure_from_yaml(yaml_file) #:nodoc:
-      yaml = YAML.load_file(Nezu.root.join('config', yaml_file))[Nezu.env]
+      yaml = YAML.load_file(Nezu.root.join('config', yaml_file))
       configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
     end
   end

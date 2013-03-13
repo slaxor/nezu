@@ -30,17 +30,17 @@ describe Nezu::Runtime::Consumer do
     end
 
     it 'should use the queue_prefix if its set' do
-      configatron.amqp.queue_prefix = 'the_prefix'
+      configatron.amqp.send(Nezu.env.to_sym).queue_prefix = 'the_prefix'
       module JustAModule;class ConsumerWithPrefix<Nezu::Runtime::Consumer;end;end
       JustAModule::ConsumerWithPrefix.queue_name.should == 'the_prefix.just_a_module.consumer_with_prefix'
-      configatron.amqp.queue_prefix = nil
+      configatron.amqp.send(Nezu.env.to_sym).queue_prefix = nil
     end
 
     it 'should use the queue_postfix if its set' do
-      configatron.amqp.queue_postfix = 'the_postfix'
+      configatron.amqp.send(Nezu.env.to_sym).queue_postfix = 'the_postfix'
       module JustAModule;class ConsumerWithPostfix<Nezu::Runtime::Consumer;end;end
       JustAModule::ConsumerWithPostfix.queue_name.should == 'just_a_module.consumer_with_postfix.the_postfix'
-      configatron.amqp.queue_postfix = nil
+      configatron.amqp.send(Nezu.env.to_sym).queue_postfix = nil
     end
   end
 

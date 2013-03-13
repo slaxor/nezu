@@ -7,8 +7,8 @@ describe Nezu::Runtime::Producer do
 
   describe '::push!' do
     it 'should create a new message on the server' do
-      configatron.amqp.url = 'amqp://127.0.0.1'
-      Bunny.should_receive(:new).with(configatron.amqp.url).and_return(AlwaysHappy.new)
+      configatron.amqp.send(Nezu.env.to_sym).url = 'amqp://127.0.0.1'
+      Bunny.should_receive(:new).with(configatron.amqp.send(Nezu.env.to_sym).url).and_return(AlwaysHappy.new)
       module ExampleProducers;class MyQueue<Nezu::Runtime::Producer;end;end
       ExampleProducers::MyQueue.push!(:foo => 'bar')
     end
