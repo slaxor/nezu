@@ -3,11 +3,6 @@ require 'active_support/core_ext/object/inclusion'
 require 'active_record'
 require 'debugger'
 
-#def load_config
-  #yaml = YAML.load_file(File.join(Nezu.root.join('config', 'database.yml')))
-  #configatron.databases.configure_from_hash(yaml)
-#end
-
 namespace :nezu do
   db_namespace = namespace :db do
     task :load_config do

@@ -17,7 +17,7 @@ module Nezu
 
       if configatron.database.present? && !Class.const_defined?(:Rails)
         require configatron.database.adapter
-        ActiveRecord::Base.establish_connection(configatron.database.to_hash)
+        ActiveRecord::Base.establish_connection(configatron.database.send(Nezu.env.to_sym).to_hash)
         ActiveRecord::Base.logger = Logger.new(Nezu.root.join('log/', 'database.log'))
       end
 
