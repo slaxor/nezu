@@ -6,18 +6,22 @@ require 'active_support/core_ext'
 require 'active_record'
 require 'configatron'
 require 'term/ansicolor'
+require 'nezu/runtime'
 
 module Nezu
   mattr_accessor :logger
 
   GEM_DIR = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
+  #used by Nezu.env and Nezu.env.developent? etc.
   class Env < String
-    def method_missing(meth, params=nil)
-      meth.to_s.sub(/\?$/, '') == self
+    def method_missing(meth, params=nil) #:nodoc:
+      env = meth.to_s.sub(/\?$/, '')
+      super if env == meth.to_s # doesn't end on "?" ? try parents.
+      env == self
     end
 
-    def respond_to?(meth, params=nil)
+    def respond_to?(meth, params=nil) #:nodoc:
       !!meth.to_s.match(/\?$/)
     end
   end
@@ -64,8 +68,8 @@ module Nezu
         'DEBUG'   => 'DEBUG'.blue,
         'INFO'    => ' INFO'.green,
         'WARN'    => ' WARN'.yellow,
-        'ERROR'   => 'ERROR'.red,
-        'FATAL'   => 'FATAL'.intense_white.on_magenta,
+        'ERROR'   => 'ERROR'.intense_red,
+        'FATAL'   => 'FATAL'.intense_white.on_red,
         'ANY'     => '  ANY'.black.on_white
       }[@severity]
     end
@@ -76,7 +80,7 @@ module Nezu
     def formatted_msg
       formatted_time = @time.strftime(TIME_FORMAT) << @time.usec.to_s[0..2].rjust(3)
       if @msg.kind_of?(Exception)
-        "#{formatted_time} #{HOST} #{APP}[#{$$}][#{formatted_severity}] #{@msg.to_s}\n" +
+        "#{formatted_time} #{HOST} #{APP}[#{$$}][#{formatted_severity}] #{@msg.inspect}\n" +
         @msg.backtrace.map do |bt_line|
           "#{formatted_time} #{HOST} #{APP}[#{$$}][#{formatted_severity}] #{bt_line}\n"
         end.join
@@ -93,9 +97,13 @@ module Nezu
     Env.new(ENV['NEZU_ENV']||'development')
   end
 
+  def self.app
+    configatron.app_name.classify
+  end
+
   # Returns a String like object with the applications absolute root
   def self.root
-    Root::PATH
+    Root::APP_PATH
   end
 
   # turn errors into warnings if used in verbose mode (Nezu.try(true) { ... })
@@ -108,36 +116,9 @@ module Nezu
     Nezu.logger.warn(e) if verbose
   end
 
-  # load everything needed to run the app
-  def self.load_config
-    Nezu.try(true) { configure_from_yaml('database.yml') }
-
-    begin
-      configure_from_yaml('amqp.yml')
-    rescue
-      Nezu.logger.fatal("[Nezu Runner] no amqp config please create one in config/amqp.yml") unless configatron.amqp.present?
-      raise
-    end
-
-    if configatron.database.present?
-      ActiveRecord::Base.establish_connection(configatron.database.to_hash)
-      ActiveRecord::Base.logger = Logger.new(File.expand_path(File.join('log/', 'database.log')))
-    end
-    require 'nezu/runtime'
-    (Dir.glob(Nezu.root.join('app', '**', '*.rb')) + Dir.glob(Nezu.root.join('lib', '**', '*.rb'))).each do |file_name|
-      require file_name #Autoload is not thread-safe :(
-    end
-    Nezu.logger.debug("[Nezu Runner] config loaded")
-  end
-
-  private
-
-  #:nodoc:
-  def self.configure_from_yaml(yaml_file)
-    yaml = YAML.load_file(Nezu.root.join('config', yaml_file))[Nezu.env]
-    configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
-  end
-
+  # spew log messages
+  # just like any other ruby program
+  # e.g. Nezu.logger.info('foobar')
   def self.logger
     if @@logger.nil?
       log_target = {

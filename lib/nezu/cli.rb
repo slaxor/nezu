@@ -1,5 +1,4 @@
 require 'nezu'
-Nezu.load_config
 module Nezu
   module CLI
     def self.help(*params)
@@ -28,13 +27,16 @@ module Nezu
 
     def self.run(*params)
       puts %Q(Starting app...)
-      Nezu::Runner.new
+      require 'nezu/runner'
+      Nezu::Runtime.load_config
+      Nezu::Runner.start
       exit(0)
     end
 
     def self.console(*params)
       puts %Q(Starting console...)
       ARGV.clear
+      Nezu::Runtime.load_config
       IRB.start()
     end
   end

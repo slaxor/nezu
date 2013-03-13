@@ -1,19 +1,14 @@
-#!/usr/bin/env ruby
-
 $: << File.expand_path('./lib')
 $: << File.expand_path('./app')
 $: << File.expand_path('.')
 
-Signal.trap("INT") { Nezu::Runner.connection.close { EventMachine.stop } ; exit}
+Signal.trap("INT") { Nezu::Runner.stop}
 
 module Nezu
   class Runner
     # this is the starting point for every application running with "$> nezu run"
     # it get called from cli.rb
-    def initialize
-      Nezu.load_config
-      Nezu.logger.debug("[Nezu Runner] initialize....")
-      Nezu.try {require "config/nezu"}
+    def self.start
       AMQP.start(configatron.amqp.url) do |connection, open_ok|
         Nezu.logger.debug("[Nezu Runner] AMQP connection #{configatron.amqp.url}")
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
@@ -29,7 +24,14 @@ module Nezu
       Nezu.logger.fatal("#{self.inspect} died restarting")
       Nezu.logger.fatal(e)
       sleep 0.5
-      self.class.new
+      self.start
+    end
+
+    def self.stop(exit_code=0)
+      Nezu.logger.info("shutting down #{Nezu.app}")
+      Nezu::Runner.connection.close { EventMachine.stop }
+      Nezu.logger.info("done #{Nezu.app}")
+      exit(exit_code)
     end
 
     def self.connection

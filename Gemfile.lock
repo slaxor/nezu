@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nezu (0.4.17)
+    nezu (0.4.18)
       activerecord (~> 3.2.11)
       activesupport (~> 3.2.11)
       amqp
@@ -39,7 +39,7 @@ GEM
     columnize (0.3.6)
     configatron (2.10.0)
       yamler (>= 0.1.0)
-    debugger (1.3.3)
+    debugger (1.4.0)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.1.1)
       debugger-ruby_core_source (~> 1.2.0)
@@ -59,7 +59,7 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    rspec-core (2.13.0)
+    rspec-core (2.13.1)
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.13.0)

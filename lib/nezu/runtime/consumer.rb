@@ -1,7 +1,7 @@
 module Nezu
   module Runtime
     class Consumer
-      def self.inherited(subclass)
+      def self.inherited(subclass) #:nodoc:
         subclass.class_eval {cattr_accessor :queue_name}
         subclass.queue_name = ''
         subclass.queue_name << "#{configatron.amqp.queue_prefix}." unless configatron.amqp.queue_prefix.nil?
@@ -25,9 +25,11 @@ module Nezu
           Nezu.logger.debug("sending result #{result}of #{action} to #{recipient}")
           recipient.push!(result)
         end
+      rescue JSON::ParserError => e
+        Nezu.logger.error('Please send only json in the message body')
+        Nezu.logger.debug(e)
       rescue NoMethodError => e
-        Nezu.logger.error(e.to_s)
-        e.backtrace.each {|bt_line| Nezu.logger.error(bt_line)}
+        Nezu.logger.error(e)
       end
     end
   end
