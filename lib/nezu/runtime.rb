@@ -14,9 +14,8 @@ module Nezu
         Nezu.logger.fatal("[Nezu Runner] no amqp config please create one in config/amqp.yml") unless configatron.amqp.present?
         raise
       end
-
-      if configatron.database.present? && !Class.const_defined?(:Rails)
-        require configatron.database.adapter
+      if configatron.database.send(Nezu.env).database.present? && !Class.const_defined?(:Rails)
+        require configatron.database.send(Nezu.env).adapter
         ActiveRecord::Base.establish_connection(configatron.database.send(Nezu.env.to_sym).to_hash)
         ActiveRecord::Base.logger = Logger.new(Nezu.root.join('log/', 'database.log'))
       end
