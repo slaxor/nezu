@@ -21,20 +21,17 @@ namespace :nezu do
         end
     end
 
+    desc "Migrate the database (options: VERSION=x, VERBOSE=false)."
     task :migrate => [:load_config] do
-      if ENV['VERSION']
-        db_namespace['migrate:down'].invoke
-        db_namespace['migrate:up'].invoke
-      else
-        ActiveRecord::Migrator.migrate(Nezu.root.join('db', 'migrate')) do |migration|
-          migration.migrate(:up)
-        end
+      ActiveRecord::Migration.verbose = ENV["VERBOSE"] ? ENV["VERBOSE"] == "true" : true
+      ActiveRecord::Migrator.migrate(ActiveRecord::Migrator.migrations_paths, ENV["VERSION"] ? ENV["VERSION"].to_i : nil) do |migration|
+        ENV["SCOPE"].blank? || (ENV["SCOPE"] == migration.scope)
       end
+      db_namespace["schema:dump"].invoke
     end
 
     desc 'Rolls the schema back to the previous version (specify steps w/ STEP=n).'
     task :rollback => [:load_config] do
-      connect_to(Nezu.env)
       step = ENV['STEP'] ? ENV['STEP'].to_i : 1
       ActiveRecord::Migrator.rollback(ActiveRecord::Migrator.migrations_paths, step)
       db_namespace['schema:dump'].invoke
@@ -76,7 +73,6 @@ namespace :nezu do
       desc 'Create a db/schema.rb file'
       task :dump => [:load_config] do
         require 'active_record/schema_dumper'
-        connect_to(Nezu.env)
         filename = ENV['SCHEMA'] || "#{Nezu.root}/db/schema.rb"
         File.open(filename, "w:utf-8") do |file|
           ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
@@ -86,7 +82,6 @@ namespace :nezu do
       desc 'Create a db from schema.rb file'
       task :load => [:load_config] do
         #require 'active_record/schema_dumper'
-        connect_to(Nezu.env)
         #filename = ENV['SCHEMA'] || "#{Nezu.root}/db/schema.rb"
         #File.open(filename, "w:utf-8") do |file|
           #ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
