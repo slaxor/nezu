@@ -3,6 +3,7 @@ $: << File.expand_path('./app')
 $: << File.expand_path('.')
 
 Signal.trap("INT") { Nezu::Runner.stop}
+Signal.trap("TERM") { Nezu::Runner.stop}
 
 module Nezu
   class Runner
@@ -18,7 +19,6 @@ module Nezu
           worker = Nezu::Runtime::Worker.new(channel, consumer.new)
           worker.start
         end
-        @@connection = connection
       end
     rescue => e
       Nezu.logger.fatal("#{self.inspect} died restarting")
@@ -29,14 +29,11 @@ module Nezu
 
     def self.stop(exit_code=0)
       Nezu.logger.info("shutting down #{Nezu.app}")
-      Nezu::Runner.connection.close { EventMachine.stop }
+      AMQP.stop{ EM.stop }
       Nezu.logger.info("done #{Nezu.app}")
       exit(exit_code)
     end
 
-    def self.connection
-      @@connection
-    end
   end
 end
 
