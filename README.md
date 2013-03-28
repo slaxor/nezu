@@ -22,3 +22,5 @@ It has two major modes of usage:
 *BIGFATALPHAWARNING:*
  This hasn`t been fully tested yet. So if your working on a nuclear plant or so, go back to sleep this will be a lower risk
 
+This Software is released under the Terms of General Public License. You can find a copy of it in this project [here](gpl3.txt "GPLv3 Text")
+
