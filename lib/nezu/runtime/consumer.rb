@@ -1,17 +1,7 @@
 module Nezu
   module Runtime
     class Consumer
-      def self.inherited(subclass) #:nodoc:
-        subclass.class_eval {cattr_accessor :queue_name}
-        subclass.queue_name = ''
-        subclass.queue_name << "#{configatron.amqp.send(Nezu.env.to_sym).queue_prefix}." unless configatron.amqp.send(Nezu.env.to_sym).queue_prefix.nil?
-        subclass.queue_name << subclass.to_s.gsub(/::/, '.').underscore
-        subclass.queue_name << ".#{configatron.amqp.send(Nezu.env.to_sym).queue_postfix}" unless configatron.amqp.send(Nezu.env.to_sym).queue_postfix.nil?
-      end
-
-      def self.descendants
-        ObjectSpace.each_object(Class).select { |klass| klass < self }
-      end
+      extend Nezu::Runtime::Common
 
       def handle_message(metadata, payload)
         Nezu.logger.debug("NEZU Consumer[#{self.class}] payload: #{payload}")

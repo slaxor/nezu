@@ -34,6 +34,36 @@ module Nezu
       Nezu.logger.debug(configatron.amqp)
     end
 
+    module Common
+
+      # creates a class method ::queue_name with a queue name derived from the class name and pre- and posfixes.
+      # e.g if a classes name is Foo the queue_name will be "your_prefix.foo.your_postfix"
+      # to avoid naming conflicts it is also possible to scope the class in modules "Producers" or "Consumers"
+      # so a somthing like:
+      #:code
+      # module Producers
+      #   class FooBar < Nezu::Runtime::Producer
+      #   end
+      # end
+      #
+      # will result in a queue "your_prefix.foo_bar.your_postfix"
+      # the same goes for module "Consumers". This is especially useful if you need a consumer and a producer
+      # on the same queue
+      #
+      def inherited(subclass)
+        subclass.class_eval {cattr_accessor :queue_name} #:exchange_name?
+        subclass.queue_name = ''
+        subclass.queue_name << "#{configatron.amqp.send(Nezu.env.to_sym).queue_prefix}." unless configatron.amqp.send(Nezu.env.to_sym).queue_prefix.nil?
+        subclass.queue_name << subclass.to_s.gsub(/^(Producers|Consumers)::/, '').gsub(/::/, '.').underscore
+        subclass.queue_name << ".#{configatron.amqp.send(Nezu.env.to_sym).queue_postfix}" unless configatron.amqp.send(Nezu.env.to_sym).queue_postfix.nil?
+        subclass.queue_name
+      end
+
+      def descendants
+        ObjectSpace.each_object(Class).select { |klass| klass < self }
+      end
+    end
+
     private
 
     def self.configure_from_yaml(yaml_file) #:nodoc:

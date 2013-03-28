@@ -1,18 +1,7 @@
 module Nezu
   module Runtime
     class Producer
-      def self.inherited(subclass)
-        subclass.class_eval {cattr_accessor :queue_name} #:exchange_name?
-        subclass.queue_name = ''
-        subclass.queue_name << "#{configatron.amqp.send(Nezu.env.to_sym).queue_prefix}." unless configatron.amqp.send(Nezu.env.to_sym).queue_prefix.nil?
-        subclass.queue_name << subclass.to_s.gsub(/::/, '.').underscore
-        subclass.queue_name << ".#{configatron.amqp.send(Nezu.env.to_sym).queue_postfix}" unless configatron.amqp.send(Nezu.env.to_sym).queue_postfix.nil?
-        subclass.queue_name
-      end
-
-      def self.descendants
-        ObjectSpace.each_object(Class).select { |klass| klass < self }
-      end
+      extend Nezu::Runtime::Common
 
       def self.push!(params = {})
         conn = Bunny.new(configatron.amqp.send(Nezu.env.to_sym).url)
