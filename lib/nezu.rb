@@ -137,5 +137,5 @@ module Nezu
   end
 end
 
-require 'debugger' unless Nezu.env.production?
+require 'debugger' if Nezu.env.development?|| Nezu.env.test?
 
