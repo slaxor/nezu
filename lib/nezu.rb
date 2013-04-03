@@ -125,17 +125,18 @@ module Nezu
   # e.g. Nezu.logger.info('foobar')
   def self.logger
     if @@logger.nil?
-      log_target = {
+      log_target = Hash.new(Nezu.root.join('log/', "nezu_#{Nezu.env}.log")).merge({
         'development' => STDOUT,
-        'test' => nil,
-        'production' => File.expand_path(File.join('log/', 'nezu.log'))
-      }
+        'test' => nil
+      })
       @@logger = Logger.new(log_target[Nezu.env])
       @@logger.formatter = Nezu::CustomLogFormatter.new
+      @@logger.level = Nezu.env.development? ?  Logger::DEBUG : Logger::INFO
     end
+    debugger
     @@logger
   end
 end
 
-require 'debugger' if Nezu.env.development?|| Nezu.env.test?
+require 'debugger' if Nezu.env.development? || Nezu.env.test?
 
