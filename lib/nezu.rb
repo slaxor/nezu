@@ -133,7 +133,6 @@ module Nezu
       @@logger.formatter = Nezu::CustomLogFormatter.new
       @@logger.level = Nezu.env.development? ?  Logger::DEBUG : Logger::INFO
     end
-    debugger
     @@logger
   end
 end
