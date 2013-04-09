@@ -29,10 +29,10 @@ module Nezu
       puts %Q(Starting app...)
       require 'nezu/runner'
       Nezu::Runtime.load_config
-      if params[0].grep(/--daemon/)
-        $stdout=File.open(Nezu.root.join('log', 'nezu.stdout'), File::CREAT|File::WRONLY)
-        $stderr=File.open(Nezu.root.join('log', 'nezu.stderr'), File::CREAT|File::WRONLY)
+      if params[0].include?('--daemon')
         fork do
+          $stdout=File.open(Nezu.root.join('log', 'nezu.stdout'), File::CREAT|File::WRONLY)
+          $stderr=File.open(Nezu.root.join('log', 'nezu.stderr'), File::CREAT|File::WRONLY)
           Nezu::Runner.start
         end
       else
