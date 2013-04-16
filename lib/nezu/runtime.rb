@@ -29,7 +29,7 @@ module Nezu
        req_files.each do |file_name|
         require file_name #Autoload is not thread-safe :(
       end
-      Nezu.try {require "config/nezu"}
+      Nezu.try {require Nezu.root.join('config', 'nezu')}
       Nezu.logger.debug("[Nezu Runner] config loaded")
       Nezu.logger.debug(configatron.amqp)
     end
