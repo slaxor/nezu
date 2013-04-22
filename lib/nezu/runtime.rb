@@ -6,7 +6,7 @@ module Nezu
   module Runtime
     # load everything needed to run the app
     def self.load_config
-      Nezu.try(true) { configure_from_yaml('database.yml') }
+      configure_from_yaml('database.yml')
 
       begin
         configure_from_yaml('amqp.yml')
@@ -29,7 +29,14 @@ module Nezu
        req_files.each do |file_name|
         require file_name #Autoload is not thread-safe :(
       end
-      Nezu.try {require Nezu.root.join('config', 'nezu')}
+
+      app_config=Nezu.root.join('config', 'nezu.rb')
+      if File.exist?(app_config)
+        require app_config
+      else
+        Nezu.logger.info("#{app_config} doesn`t exist. I`m skipping it")
+      end
+
       Nezu.logger.debug("[Nezu Runner] config loaded")
       Nezu.logger.debug(configatron.amqp)
     end
@@ -67,8 +74,13 @@ module Nezu
     private
 
     def self.configure_from_yaml(yaml_file) #:nodoc:
-      yaml = YAML.load_file(Nezu.root.join('config', yaml_file))
-      configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
+      config_file = Nezu.root.join('config', yaml_file)
+      if File.exist?(config_file)
+        yaml = YAML.load_file(config_file)
+        configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
+      else
+        Nezu.logger.info("#{config_file} doesn`t exist. I`m skipping it")
+      end
     end
   end
 end
