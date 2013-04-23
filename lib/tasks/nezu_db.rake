@@ -1,7 +1,5 @@
-#require 'nezu/runner'
 require 'active_support/core_ext/object/inclusion'
 require 'active_record'
-require 'debugger'
 
 namespace :nezu do
   db_namespace = namespace :db do
