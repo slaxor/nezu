@@ -23,7 +23,7 @@ module Nezu
     rescue => e
       Nezu.logger.fatal("#{self.inspect} died restarting")
       Nezu.logger.fatal(e)
-      sleep 0.5
+      sleep 60
       self.start
     end
 
