@@ -9,7 +9,7 @@ require 'term/ansicolor'
 require 'nezu/runtime'
 
 module Nezu
-  mattr_accessor :logger
+  mattr_accessor :logger, :app, :env, :root, :gem_path
 
   #used by Nezu.env and Nezu.env.developent? etc.
   class Env < String
@@ -42,6 +42,19 @@ module Nezu
       e.backtrace.each {|bt_line| Nezu.logger.error(bt_line)}
     end
   end
+
+  # Returns a String like object with the current name of the environment that responds to thinks like "#development?"
+  self.env = Env.new(ENV['NEZU_ENV']||'development')
+
+  # Returns the app as a class
+  self.app = configatron.app_name.classify
+
+  # Returns a String like object with the applications absolute root
+  self.root = Root::APP_PATH
+
+  # Returns a String like object with the gems absolute root
+  self.gem_path = Root::GEM_PATH
+
 
   # all these nice colorful log entries are created here
   # if you don`t like them just override its #call method
@@ -91,25 +104,6 @@ module Nezu
     end
   end
 
-  # Returns a String like object with the current name of the environment
-  def self.env
-    Env.new(ENV['NEZU_ENV']||'development')
-  end
-
-  def self.app
-    configatron.app_name.classify
-  end
-
-  # Returns a String like object with the applications absolute root
-  def self.root
-    Root::APP_PATH
-  end
-
-  # Returns a String like object with the gems absolute root
-  def self.gem_path
-    Root::GEM_PATH
-  end
-
   # turn errors into warnings if used in verbose mode (Nezu.try(true) { ... })
   # useful if you find it acceptable that something isn't
   # working
@@ -136,6 +130,4 @@ module Nezu
     @@logger
   end
 end
-
-require 'debugger' if Nezu.env.development? || Nezu.env.test?
 

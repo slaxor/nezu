@@ -1,35 +1,21 @@
+require 'optparse'
 require 'nezu'
 module Nezu
   module CLI
-    def self.help(*params)
-      script_name = File.basename(__FILE__)
-      puts %Q(
-        Usage:
-
-        "#{script_name} new <appname>" for an app skeleton dir in <appname>
-        "#{script_name} run" inside an app dir to start it
-        "#{script_name} console" inside an app dir to get an irb shell with your current env loaded
-
-      ).gsub(/^\s*/, '')
-      exit(1)
-    end
-
-    def self.new(*params)
-      amqp_scope = params[0].grep(/--amqp_scope/)[0].match(/=(\S*)/)[1] rescue nil
-      configatron.amqp_scope = amqp_scope if amqp_scope
-      puts %Q(Creating application dir in "#{params[0][0]}")
+    def self.new(params={})
+      puts %Q(Creating application dir in "#{params[:app]}")
       require 'nezu/generators'
-      app = Nezu::Generators::Application::AppGenerator.new(params[0][0])
+      app = Nezu::Generators::Application::AppGenerator.new(params[:app])
       app.generate!
       puts %Q(Successfully created App.)
       exit(0)
     end
 
-    def self.run(*params)
+    def self.run(params={})
       puts %Q(Starting app...)
       require 'nezu/runner'
       Nezu::Runtime.load_config
-      if params[0].include?('--daemon')
+      if params[:daemon]
         fork do
           $stdout=File.open(Nezu.root.join('log', 'nezu.stdout'), File::CREAT|File::WRONLY)
           $stderr=File.open(Nezu.root.join('log', 'nezu.stderr'), File::CREAT|File::WRONLY)
@@ -41,14 +27,49 @@ module Nezu
       exit(0)
     end
 
-    def self.console(*params)
+    def self.console(params={})
       puts %Q(Starting console...)
-      ARGV.clear
       Nezu::Runtime.load_config
       IRB.start()
     end
   end
 end
 
-Nezu::CLI.send(ARGV.shift, ARGV)
+begin
+  command = ARGV.shift
+  options = {}
 
+  if command == 'new'
+    options[:app] = ARGV.shift
+  else
+
+    optparse = OptionParser.new do|opts|
+      opts.program_name = "#{File.basename($0, '.*')} COMMAND:=run|console|new"
+
+      opts.on( '-h', '--help', 'Display this screen' ) do
+        puts opts
+        exit
+      end
+      if command == 'run'
+        options[:daemon] = false
+        opts.on( '-d', '--daemon', 'Run as a background process' ) do
+          options[:daemon] = true
+        end
+
+      end
+
+      opts.on( '-E <ENV>', '--env <ENV>', 'Start the app with the given environment' ) do |env|
+        options[:env] = env
+        Nezu.env = Nezu::Env.new(env)
+      end
+    end
+
+    optparse.parse!
+  end
+
+  require 'debugger' if Nezu.env.development? || Nezu.env.test?
+
+  Nezu::CLI.send(command, options)
+rescue OptionParser::MissingArgument, OptionParser::InvalidOption
+  puts optparse
+end
