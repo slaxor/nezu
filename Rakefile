@@ -4,7 +4,6 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 require 'rdoc/task'
 require 'sdoc'
-require 'debugger'
 
 task :default => :spec
 
