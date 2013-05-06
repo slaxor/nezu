@@ -7,8 +7,10 @@ module Nezu
         Nezu.logger.debug("NEZU Consumer[#{self.class}] payload: #{payload}")
         params = JSON.parse(payload.to_s)
         action = params.delete('__action')
-        reply_to = params['__reply_to']
+
         result = self.send(action.to_sym, params)
+        reply_to = result[:end] == 'true' ? nil : params['__reply_to']
+
         if reply_to
           result.reverse_merge!('__action' => "#{action}_result")
           recipient = Nezu::Runtime::Recipient.new(reply_to)
