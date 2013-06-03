@@ -8,11 +8,12 @@ module Nezu
 
     class RecipientError < RuntimeError
       def self.does_not_exist(q)
+        klass = q.sub(/^#{configatron.amqp.development.queue_prefix}./, '').sub(/.#{configatron.amqp.development.queue_postfix}$/,'').classify
         message = %Q(
-          The class "#{q.classify}" doesn`t exist or is not a child of "Nezu::Runtime::Producer".
-          Please create one in \"app/producers/#{q}.rb\" with the content of at least:
+          The class "#{klass}" doesn`t exist or is not a child of "Nezu::Runtime::Producer".
+          Please create one in \"app/producers/#{klass.underscore}.rb\" with the content of at least:
 
-          class #{q.classify} < Nezu::Runtime::Producer
+          class #{klass} < Nezu::Runtime::Producer
           end
         ).gsub(/^\s*/, '')
         self.new(message)
