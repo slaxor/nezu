@@ -43,7 +43,7 @@ namespace :version do
 
     def store_version(major, minor, patch)
       version = "#{major}.#{minor}.#{patch}"
-      f= File.new(File.join(File.dirname(__FILE__), 'VERSION'), File::WRONLY)
+      f= File.new(File.join(File.dirname(__FILE__), 'VERSION'), File::WRONLY|File::TRUNC)
       f.write(version)
       f.close
       puts "version is now #{version}"
