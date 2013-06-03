@@ -9,6 +9,9 @@ module Nezu
         ch = conn.create_channel
         q  = ch.queue(queue_name)
         q.publish(params.to_json, :content_type => 'application/json')
+      rescue Bunny::ClientTimeout
+        nil
+      ensure
         conn.stop
       end
     end
