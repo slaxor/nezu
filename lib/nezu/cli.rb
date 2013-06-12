@@ -16,9 +16,9 @@ module Nezu
       require 'nezu/runner'
       Nezu::Runtime.load_config
       if params[:daemon]
+        $stdout=File.open(Nezu.root.join('log', 'nezu.stdout'), File::CREAT|File::WRONLY)
+        $stderr=File.open(Nezu.root.join('log', 'nezu.stderr'), File::CREAT|File::WRONLY)
         fork do
-          $stdout=File.open(Nezu.root.join('log', 'nezu.stdout'), File::CREAT|File::WRONLY)
-          $stderr=File.open(Nezu.root.join('log', 'nezu.stderr'), File::CREAT|File::WRONLY)
           Nezu::Runner.start
         end
       else
