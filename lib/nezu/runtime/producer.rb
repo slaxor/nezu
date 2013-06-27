@@ -9,7 +9,9 @@ module Nezu
         ch = conn.create_channel
         q  = ch.queue(queue_name)
         q.publish(params.to_json, :content_type => 'application/json')
-        conn.stop
+        #conn.stop
+        conn.close
+        #ch.close
       end
     end
   end
