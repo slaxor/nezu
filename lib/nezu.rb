@@ -20,7 +20,7 @@ module Nezu
     end
 
     def respond_to?(meth, params=nil) #:nodoc:
-      !!meth.to_s.match(/\?$/)
+      !!meth.to_s.match(/\?$/) || super
     end
   end
 

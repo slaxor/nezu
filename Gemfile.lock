@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    nezu (0.6.69)
-      activerecord (~> 3.2.11)
-      activesupport (~> 3.2.11)
+    nezu (0.7.0)
+      activerecord
+      activesupport
       amqp
       bunny (>= 0.9.0.pre8)
       configatron
@@ -34,10 +34,10 @@ GEM
       eventmachine
     arel (3.0.2)
     builder (3.0.4)
-    bunny (0.9.0.rc1)
+    bunny (0.9.0.rc2)
       amq-protocol (>= 1.6.0)
     columnize (0.3.6)
-    configatron (2.10.0)
+    configatron (2.13.0)
       yamler (>= 0.1.0)
     debugger (1.6.0)
       columnize (>= 0.3.1)
@@ -67,7 +67,7 @@ GEM
       rdoc (~> 3.10)
     term-ansicolor (1.2.2)
       tins (~> 0.8)
-    tins (0.8.0)
+    tins (0.8.2)
     tzinfo (0.3.37)
     yamler (0.1.0)
 
