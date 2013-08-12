@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency             'amqp'
   s.add_dependency             'mysql2'
-  s.add_dependency             'bunny', '>= 0.9.0.pre8'
+  s.add_dependency             'bunny'
   s.add_dependency             'activerecord'
   s.add_dependency             'activesupport'
   s.add_dependency             'configatron'
