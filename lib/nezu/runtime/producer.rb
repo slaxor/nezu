@@ -4,7 +4,7 @@ module Nezu
       extend Nezu::Runtime::Common
 
       def self.push!(params = {})
-        connection = Bunny.new(configatron.amqp.send(Nezu.env.to_sym).url, :threaded => false)
+        connection = Bunny.new(Nezu::Config.amqp[Nezu.env.to_sym].url, :threaded => false)
         connection.start
         channel = connection.create_channel
         queue ||= channel.queue(queue_name)

@@ -6,16 +6,16 @@ describe Nezu::Generators do
   describe '#template_to' do
     it 'should create a (parsed) copy in the app dir' do
       template_to('test_file')
-      File.exists?(File.join(configatron.destination_root, '/test_file')).should be_true
+      File.exists?(File.join(Nezu::Config.destination_root, '/test_file')).should be_true
     end
 
     it 'should parse .tt files using erb' do
       template_to('test_file')
-      File.read(File.join(configatron.destination_root, '/test_file')).match(/Hi there/).should_not be_nil
+      File.read(File.join(Nezu::Config.destination_root, '/test_file')).match(/Hi there/).should_not be_nil
     end
 
     after do
-      %x(rm -rf #{configatron.destination_root})
+      %x(rm -rf #{Nezu::Config.destination_root})
     end
   end
 

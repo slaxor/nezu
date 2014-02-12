@@ -9,6 +9,7 @@ module Nezu
         action = params.delete('__action')
 
         result = self.send(action.to_sym, params)
+        #debugger
         reply_to = result[:end] == 'true' ? nil : params['__reply_to']
 
         if reply_to

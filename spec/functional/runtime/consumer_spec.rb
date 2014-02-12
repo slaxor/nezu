@@ -2,6 +2,12 @@ require 'spec_helper'
 require 'nezu/runtime/consumer'
 describe Nezu::Runtime::Consumer do
   describe '::descendants' do
+    before do
+      #Nezu::Config.amqp.test
+      #Nezu::Config.amqp.test.queue_prefix=:test
+      #Nezu::Config.amqp.test.queue_postfix='test'
+    end
+
     it 'should return a list of heirs' do
       class Consumer1 < Nezu::Runtime::Consumer;end
       class Consumer2 < Nezu::Runtime::Consumer;end
@@ -12,7 +18,10 @@ describe Nezu::Runtime::Consumer do
   describe '#handle_message' do
     before do
       class Consumer1 < Nezu::Runtime::Consumer;end
-      Consumer1.any_instance.should_receive(:send).any_number_of_times.and_return({a: 'hash', with: 'no real_value'})
+      Consumer1.any_instance.stub(:send) do |action, params|
+        params ||= {}
+        params.merge({__action: action})
+      end
       @consumer = Consumer1.new
     end
 
@@ -30,17 +39,17 @@ describe Nezu::Runtime::Consumer do
     end
 
     it 'should use the queue_prefix if its set' do
-      configatron.amqp.send(Nezu.env.to_sym).queue_prefix = 'the_prefix'
+      Nezu::Config.amqp[Nezu.env.to_sym].queue_prefix = 'the_prefix'
       module JustAModule;class ConsumerWithPrefix<Nezu::Runtime::Consumer;end;end
       JustAModule::ConsumerWithPrefix.queue_name.should == 'the_prefix.just_a_module.consumer_with_prefix'
-      configatron.amqp.send(Nezu.env.to_sym).queue_prefix = nil
+      Nezu::Config.amqp[Nezu.env.to_sym].queue_prefix = nil
     end
 
     it 'should use the queue_postfix if its set' do
-      configatron.amqp.send(Nezu.env.to_sym).queue_postfix = 'the_postfix'
+      Nezu::Config.amqp[Nezu.env.to_sym].queue_postfix = 'the_postfix'
       module JustAModule;class ConsumerWithPostfix<Nezu::Runtime::Consumer;end;end
       JustAModule::ConsumerWithPostfix.queue_name.should == 'just_a_module.consumer_with_postfix.the_postfix'
-      configatron.amqp.send(Nezu.env.to_sym).queue_postfix = nil
+      Nezu::Config.amqp[Nezu.env.to_sym].queue_postfix = nil
     end
   end
 

@@ -8,8 +8,14 @@ require 'configatron'
 require 'term/ansicolor'
 require 'nezu/runtime'
 
+# Just an empty Module to give consumers a home
+module Consumers;end
+# Just an empty Module to give producers a home
+module Producers;end
+
 module Nezu
   mattr_accessor :logger, :app, :env, :root, :gem_path
+  Config = configatron
 
   #used by Nezu.env and Nezu.env.developent? etc.
   class Env < String
@@ -47,7 +53,7 @@ module Nezu
   self.env = Env.new(ENV['NEZU_ENV']||'development')
 
   # Returns the app as a class
-  self.app = configatron.app_name.classify
+  self.app = Nezu::Config.app_name.classify
 
   # Returns a String like object with the applications absolute root
   self.root = Root::APP_PATH

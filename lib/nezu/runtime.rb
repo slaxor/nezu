@@ -11,12 +11,12 @@ module Nezu
       begin
         configure_from_yaml('amqp.yml')
       rescue
-        Nezu.logger.fatal("[Nezu Runner] no amqp config please create one in config/amqp.yml") unless configatron.amqp.present?
+        Nezu.logger.fatal("[Nezu Runner] no amqp config please create one in config/amqp.yml") unless Nezu::Config.amqp.present?
         raise
       end
-      if configatron.database.send(Nezu.env).database.present? && !Class.const_defined?(:Rails)
-        require configatron.database.send(Nezu.env).adapter
-        ActiveRecord::Base.establish_connection(configatron.database.send(Nezu.env.to_sym).to_hash)
+      if Nezu::Config.database.send(Nezu.env).database.present? && !Class.const_defined?(:Rails)
+        require Nezu::Config.database.send(Nezu.env).adapter
+        ActiveRecord::Base.establish_connection(Nezu::Config.database.send(Nezu.env.to_sym).to_hash)
         ActiveRecord::Base.logger = Logger.new(Nezu.root.join('log/', 'database.log'))
       end
 
@@ -38,7 +38,7 @@ module Nezu
       end
 
       Nezu.logger.debug("[Nezu Runner] config loaded")
-      Nezu.logger.debug(configatron.amqp)
+      Nezu.logger.debug(Nezu::Config.amqp)
     end
 
     module Common
@@ -59,10 +59,11 @@ module Nezu
       #
       def inherited(subclass)
         subclass.class_eval {cattr_accessor :queue_name} #:exchange_name?
+        #debugger
         subclass.queue_name = ''
-        subclass.queue_name << "#{configatron.amqp.send(Nezu.env.to_sym).queue_prefix}." unless configatron.amqp.send(Nezu.env.to_sym).queue_prefix.nil?
+        subclass.queue_name << "#{Nezu::Config.amqp[Nezu.env.to_sym].queue_prefix}." unless Nezu::Config.amqp[Nezu.env.to_sym].queue_prefix.nil?
         subclass.queue_name << subclass.to_s.gsub(/^(Producers|Consumers)::/, '').gsub(/::/, '.').underscore
-        subclass.queue_name << ".#{configatron.amqp.send(Nezu.env.to_sym).queue_postfix}" unless configatron.amqp.send(Nezu.env.to_sym).queue_postfix.nil?
+        subclass.queue_name << ".#{Nezu::Config.amqp[Nezu.env.to_sym].queue_postfix}" unless Nezu::Config.amqp[Nezu.env.to_sym].queue_postfix.nil?
         subclass.queue_name
       end
 
@@ -77,7 +78,7 @@ module Nezu
       config_file = Nezu.root.join('config', yaml_file)
       if File.exist?(config_file)
         yaml = YAML.load_file(config_file)
-        configatron.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
+        Nezu::Config.configure_from_hash(File.basename(yaml_file.sub(/.yml/, '')) => yaml)
       else
         Nezu.logger.info("#{config_file} doesn`t exist. I`m skipping it")
       end
