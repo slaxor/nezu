@@ -27,6 +27,7 @@ module Nezu
         req_files += Dir.glob(Nezu.root.join('lib', '**', '*.rb'))
       end
        req_files.each do |file_name|
+        Nezu.logger.debug("requiring #{file_name}")
         require file_name #Autoload is not thread-safe :(
       end
 
