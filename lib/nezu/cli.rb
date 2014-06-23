@@ -67,8 +67,6 @@ begin
     optparse.parse!
   end
 
-  require 'debugger' if Nezu.env.development? || Nezu.env.test?
-
   Nezu::CLI.send(command, options)
 rescue OptionParser::MissingArgument, OptionParser::InvalidOption
   puts optparse
