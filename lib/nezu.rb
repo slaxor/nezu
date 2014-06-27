@@ -98,10 +98,9 @@ module Nezu
     def formatted_msg
       formatted_time = @time.strftime(TIME_FORMAT) << @time.usec.to_s[0..2].rjust(3)
       if @msg.kind_of?(Exception)
-        "#{formatted_time} #{HOST} #{APP}[#{$$}][#{formatted_severity}] #{@msg.inspect}\n" +
-        @msg.backtrace.map do |bt_line|
-          "#{formatted_time} #{HOST} #{APP}[#{$$}][#{formatted_severity}] #{bt_line}\n"
-        end.join
+        msg = "#{formatted_time} #{HOST} #{APP}[#{$$}][#{formatted_severity}] #{@msg.to_s}\n"
+        bt = @msg.backtrace.reduce("") {|accu, bt_line| accu += "#{formatted_time} #{HOST} #{APP}[#{$$}][#{formatted_severity}] #{bt_line}\n"}
+        "#{msg}#{bt}"
       elsif @msg.kind_of?(String)
         "#{formatted_time} #{HOST} #{APP}[#{$$}][#{formatted_severity}] #{@msg.strip}\n"
       else

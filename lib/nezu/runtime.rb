@@ -60,7 +60,6 @@ module Nezu
       #
       def inherited(subclass)
         subclass.class_eval {cattr_accessor :queue_name} #:exchange_name?
-        #debugger
         subclass.queue_name = ''
         subclass.queue_name << "#{Nezu::Config.amqp[Nezu.env.to_sym].queue_prefix}." unless Nezu::Config.amqp[Nezu.env.to_sym].queue_prefix.nil?
         subclass.queue_name << subclass.to_s.gsub(/^(Producers|Consumers)::/, '').gsub(/::/, '.').underscore
