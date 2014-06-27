@@ -7,16 +7,16 @@ module Nezu
     # load everything needed to run the app
     def self.load_config
       configure_from_yaml('database.yml')
-
+      db_config = Nezu::Config.database[Nezu.env]
       begin
         configure_from_yaml('amqp.yml')
       rescue
         Nezu.logger.fatal("[Nezu Runner] no amqp config please create one in config/amqp.yml") unless Nezu::Config.amqp.present?
         raise
       end
-      if Nezu::Config.database.send(Nezu.env).database.present? && !Class.const_defined?(:Rails)
-        require Nezu::Config.database.send(Nezu.env).adapter
-        ActiveRecord::Base.establish_connection(Nezu::Config.database.send(Nezu.env.to_sym).to_hash)
+      if db_config.database.present? && !Class.const_defined?(:Rails)
+        require db_config.adapter
+        ActiveRecord::Base.establish_connection(db_config.to_hash)
         ActiveRecord::Base.logger = Logger.new(Nezu.root.join('log/', 'database.log'))
       end
 
