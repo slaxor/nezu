@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/slaxor/nezu.png?label=ready&title=Ready)](https://waffle.io/slaxor/nezu)
 Nezu
 ====
 Nezu is a rails inspired simple amqp app framework. Right now it is pretty much a work in progress though we hope that it will do the job here at talkyoo.net.
